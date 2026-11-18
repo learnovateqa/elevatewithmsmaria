@@ -220,7 +220,7 @@
 
 
   /* ---------- Course finder ---------- */
-  .pill-now{display:inline-block;font-size:.72rem;font-weight:600;color:var(--rose-deep);background:var(--rose-soft);padding:2px 10px;border-radius:999px;margin-right:6px;vertical-align:1px}
+  .pill-now{display:inline-block;font-size:.72rem;font-weight:600;color:var(--rose-deep);background:#fff;border:1.5px solid var(--rose);padding:2px 10px;border-radius:999px;margin-right:6px;vertical-align:1px}
   .finder{
     margin-top:48px;border-radius:28px;padding:34px;position:relative;overflow:hidden;scroll-margin-top:12px;
     background:linear-gradient(135deg,#fff 0%,var(--lav-soft) 55%,var(--rose-soft) 100%);border:1px solid var(--line);box-shadow:var(--shadow);
@@ -343,6 +343,17 @@
   .c-safety{--accent:var(--peach);--accent-soft:var(--peach-soft);--accent-text:var(--peach-deep);--accent-grad:linear-gradient(90deg,var(--peach),var(--rose),var(--peach))}
   .c-beauty{--accent:#f5b8e0;--accent-soft:#fdeaf6;--accent-text:#c2509a;--accent-grad:linear-gradient(90deg,#f5b8e0,var(--peach),#f5b8e0)}
   .c-lang  {--accent:var(--lav); --accent-soft:var(--lav-soft); --accent-text:var(--lav-deep); --accent-grad:linear-gradient(90deg,var(--lav),var(--sky),var(--lav))}
+
+
+  .school-link{color:inherit;text-decoration:none;border-bottom:1.5px dashed currentColor}
+  .school-link:hover{color:var(--plum)}
+  .school-card{display:flex;align-items:center;gap:14px;margin-top:14px;padding:14px 16px;border-radius:16px;background:#fff;border:1.5px solid var(--line);text-decoration:none;box-shadow:var(--shadow);transition:transform .2s,border-color .2s}
+  .school-card:hover{transform:translateY(-3px);border-color:var(--sky)}
+  .sc-icon{width:44px;height:44px;border-radius:14px;background:var(--sky-soft);display:grid;place-items:center;font-size:1.4rem;flex-shrink:0}
+  .school-card b{display:block;color:var(--plum);font-size:.95rem}
+  .school-card small{display:block;color:var(--muted);font-size:.8rem}
+  .sc-go{margin-left:auto;color:var(--sky-deep);font-weight:700;font-size:1.1rem}
+  @media (max-width:900px){ .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-width:360px} }
 
   /* ---------- Enroll ---------- */
   .btn-enroll{margin-top:22px;background:var(--grad);color:var(--plum);box-shadow:0 8px 20px rgba(229,127,165,.35);position:relative;overflow:hidden}
@@ -495,7 +506,7 @@
         </div>
         <div>
           <h1>Elevate with Ms. Maria</h1>
-          <p>Learnovate Qatar · Student Portal</p>
+          <p><a class="school-link" href="https://learnovateqa.com/" target="_blank" rel="noopener">Learnovate Qatar</a> · Student Portal</p>
         </div>
       </div>
       <div class="contact">
@@ -704,6 +715,11 @@
           <b>🌸 More courses available</b>
           <span>Don't see your course above? Ms. Maria offers other courses too. Choose <em>"Other course"</em> in the form and tell her what you're looking for.</span>
         </div>
+        <a class="school-card" href="https://learnovateqa.com/" target="_blank" rel="noopener">
+          <span class="sc-icon" aria-hidden="true">🏫</span>
+          <span><b>Learnovate Qatar</b><small>Visit our school website · learnovateqa.com</small></span>
+          <span class="sc-go" aria-hidden="true">↗</span>
+        </a>
         <ul class="perks">
           <li>💬 Personal course counselling</li>
           <li>📅 Flexible start dates</li>
@@ -833,7 +849,7 @@
 
 <footer>
   <div class="wrap">
-    <div>© 2026 Elevate with Ms. Maria · Learnovate Qatar</div>
+    <div>© 2026 Elevate with Ms. Maria · <a href="https://learnovateqa.com/" target="_blank" rel="noopener">Learnovate Qatar</a></div>
     <div class="links">
       <!-- EDIT: WhatsApp number & email -->
       <a href="https://wa.me/97470771337" target="_blank" rel="noopener">WhatsApp</a>
@@ -841,6 +857,7 @@
       <a href="#courses">Academies</a>
       <a href="#catalog">Courses</a>
       <a href="#enroll">Enroll</a>
+      <a href="https://learnovateqa.com/" target="_blank" rel="noopener">🏫 Our School</a>
     </div>
   </div>
 </footer>
