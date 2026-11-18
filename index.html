@@ -112,6 +112,29 @@
   .stat b{display:block;font-size:1.35rem;color:var(--rose-deep);font-weight:700;line-height:1.2}
   .stat small{color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;font-weight:500}
 
+
+  /* ---------- Portrait ---------- */
+  .hero-row{display:flex;align-items:center;justify-content:space-between;gap:40px;position:relative;z-index:1}
+  .portrait{position:relative;flex-shrink:0;margin:40px 10px 0 0;text-align:center;opacity:0;animation:popIn .9s .35s cubic-bezier(.3,1.4,.5,1) forwards}
+  @keyframes popIn{from{opacity:0;transform:scale(.85) translateY(16px)}to{opacity:1;transform:none}}
+  .ring{
+    width:250px;height:250px;border-radius:50%;padding:7px;position:relative;
+    background:conic-gradient(from 0deg,var(--rose),var(--lav),var(--mint),var(--peach),var(--rose));
+    animation:bob 5s ease-in-out infinite;
+    box-shadow:0 18px 40px rgba(160,100,140,.28);
+  }
+  .ring::before{content:"";position:absolute;inset:-14px;border-radius:50%;border:2px dashed rgba(229,127,165,.45);animation:rotate 30s linear infinite}
+  @keyframes rotate{to{transform:rotate(360deg)}}
+  .ring img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;border:5px solid #fff;background:#fff}
+  .wave{position:absolute;top:18px;left:6px;font-size:2rem;background:#fff;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;box-shadow:var(--shadow);animation:waveHand 2.4s ease-in-out infinite;transform-origin:70% 70%}
+  @keyframes waveHand{0%,60%,100%{transform:rotate(0)}10%,30%{transform:rotate(16deg)}20%,40%{transform:rotate(-8deg)}}
+  .portrait figcaption{
+    margin-top:18px;background:rgba(255,255,255,.8);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    border-radius:16px;padding:10px 18px;box-shadow:0 6px 18px rgba(160,100,140,.12);display:inline-block;
+  }
+  .portrait figcaption b{display:block;color:var(--plum);font-size:1rem;font-weight:700}
+  .portrait figcaption span{display:block;color:var(--rose-deep);font-size:.8rem;font-weight:500}
+
   /* ---------- Sections ---------- */
   main{margin-top:-30px;position:relative;z-index:2;padding-bottom:40px}
   .section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:44px 0 18px}
@@ -258,7 +281,14 @@
     .topbar{flex-direction:column;align-items:flex-start}
     .contact{width:100%}
     .contact .btn{flex:1}
-    .hero{margin-top:28px}
+    .hero{margin-top:20px}
+    .hero-row{flex-direction:column-reverse;align-items:stretch;gap:0}
+    .portrait{margin:26px auto 0;display:flex;align-items:center;gap:16px;text-align:left}
+    .ring{width:110px;height:110px;padding:5px;flex-shrink:0}
+    .ring::before{inset:-9px}
+    .ring img{border-width:3px}
+    .wave{width:36px;height:36px;font-size:1.3rem;top:-4px;left:-4px}
+    .portrait figcaption{margin-top:0}
     .grid{grid-template-columns:1fr}
     .tools{grid-template-columns:1fr}
     .tip{grid-template-columns:1fr;padding:20px}
@@ -269,7 +299,7 @@
   }
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
-    .hero > *,.reveal{opacity:1!important;transform:none!important}
+    .hero > *,.reveal,.portrait{opacity:1!important;transform:none!important}
   }
 </style>
 </head>
@@ -314,6 +344,7 @@
       </div>
     </div>
 
+    <div class="hero-row">
     <div class="hero">
       <h2>All your academies, <span>one portal.</span></h2>
       <p>Choose your course below to continue learning — English, GED, Healthcare & BLS, Business, HR, Admin, Customer Care and Logistics, with Midwifery and Train the Trainer coming soon, all in one place.</p>
@@ -323,6 +354,18 @@
         <div class="stat"><b>4</b><small>Study Tools</small></div>
         <div class="stat"><b>24/7</b><small>Access</small></div>
       </div>
+    </div>
+
+    <figure class="portrait">
+      <div class="ring">
+        <img src="maria.jpg" alt="Ms. Maria, tutor at Learnovate Qatar" width="640" height="640">
+      </div>
+      <span class="wave" aria-hidden="true">👋</span>
+      <figcaption>
+        <b>Hi, I'm Ms. Maria!</b>
+        <span>Your tutor &amp; guide at Learnovate Qatar</span>
+      </figcaption>
+    </figure>
     </div>
   </div>
 </header>
