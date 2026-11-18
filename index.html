@@ -174,7 +174,7 @@
 
 
   /* Coming soon card */
-  .card.coming{border:2px dashed var(--mint);background:linear-gradient(180deg,#fff, var(--mint-soft))}
+  .card.coming{border:2px dashed var(--accent);background:linear-gradient(180deg,#fff, var(--accent-soft))}
   .ribbon{
     position:absolute!important;top:16px;right:-38px;transform:rotate(35deg);z-index:2;
     background:var(--grad);color:var(--plum);font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
@@ -185,6 +185,7 @@
 
   .lang  {--accent:var(--lav);  --accent-soft:var(--lav-soft);  --accent-text:var(--lav-deep);  --accent-grad:linear-gradient(90deg,var(--lav),var(--rose),var(--lav))}
   .biz   {--accent:var(--sky);  --accent-soft:var(--sky-soft);  --accent-text:var(--sky-deep);  --accent-grad:linear-gradient(90deg,var(--sky),var(--lav),var(--sky))}
+  .teach {--accent:var(--rose); --accent-soft:var(--rose-soft); --accent-text:var(--rose-deep); --accent-grad:linear-gradient(90deg,var(--rose),var(--lav),var(--rose))}
   .health{--accent:var(--mint); --accent-soft:var(--mint-soft); --accent-text:var(--mint-deep); --accent-grad:linear-gradient(90deg,var(--mint),var(--lav),var(--mint))}
 
   /* ---------- Quick tools ---------- */
@@ -315,10 +316,10 @@
 
     <div class="hero">
       <h2>All your academies, <span>one portal.</span></h2>
-      <p>Choose your course below to continue learning — English, GED, Healthcare & BLS, Business, HR, Admin, Customer Care and Logistics, with Midwifery coming soon, all in one place.</p>
+      <p>Choose your course below to continue learning — English, GED, Healthcare & BLS, Business, HR, Admin, Customer Care and Logistics, with Midwifery and Train the Trainer coming soon, all in one place.</p>
       <div class="stats">
         <div class="stat"><b>9</b><small>Academies</small></div>
-        <div class="stat"><b>+1</b><small>Coming Soon</small></div>
+        <div class="stat"><b>+2</b><small>Coming Soon</small></div>
         <div class="stat"><b>4</b><small>Study Tools</small></div>
         <div class="stat"><b>24/7</b><small>Access</small></div>
       </div>
@@ -331,10 +332,11 @@
 
     <!-- ============ FILTER TABS ============ -->
     <div class="tabs" role="tablist" aria-label="Filter academies by category">
-      <button class="tab" role="tab" aria-selected="true"  data-filter="all">All Academies <span class="count">10</span></button>
+      <button class="tab" role="tab" aria-selected="true"  data-filter="all">All Academies <span class="count">11</span></button>
       <button class="tab" role="tab" aria-selected="false" data-filter="lang">Language &amp; Test Prep <span class="count">2</span></button>
       <button class="tab" role="tab" aria-selected="false" data-filter="biz">Business &amp; Admin <span class="count">5</span></button>
       <button class="tab" role="tab" aria-selected="false" data-filter="health">Healthcare <span class="count">3</span></button>
+      <button class="tab" role="tab" aria-selected="false" data-filter="teach">Teaching &amp; Training <span class="count">1</span></button>
     </div>
 
     <div class="section-head">
@@ -426,6 +428,14 @@
         <a class="go" href="https://learnovateqa.github.io/Logistics_SCM_Academy/" target="_blank" rel="noopener">Open Academy <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
       </article>
 
+      <article class="card teach coming" data-cat="teach">
+        <span class="ribbon">Coming Soon</span>
+        <div class="card-top"><div class="icon" aria-hidden="true">👩‍🏫</div><span class="badge">In Development</span></div>
+        <div><span class="cat">Teaching &amp; Training</span><h4>Train the Trainer</h4></div>
+        <p>Learn to plan, deliver and assess engaging training sessions. Message Ms. Maria to be the first to know when it opens.</p>
+        <a class="go" href="https://wa.me/97470771337?text=Hello%20Ms.%20Maria%2C%20please%20let%20me%20know%20when%20the%20Train%20the%20Trainer%20course%20opens." target="_blank" rel="noopener">Notify Me on WhatsApp <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+      </article>
+
     </section>
 
     <!-- ============ QUICK STUDY TOOLS ============ -->
@@ -503,7 +513,7 @@
   var tabs = document.querySelectorAll('.tab');
   var cards = document.querySelectorAll('.card');
   var title = document.getElementById('gridTitle');
-  var names = { all: 'All Academies', lang: 'Language & Test Prep', biz: 'Business & Admin', health: 'Healthcare' };
+  var names = { all: 'All Academies', lang: 'Language & Test Prep', biz: 'Business & Admin', health: 'Healthcare', teach: 'Teaching & Training' };
 
   function applyFilter(f) {
     tabs.forEach(function (t) { t.setAttribute('aria-selected', t.dataset.filter === f ? 'true' : 'false'); });
