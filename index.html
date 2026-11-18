@@ -226,6 +226,46 @@
   .tool b{display:block;color:var(--plum);font-size:.9rem;line-height:1.3;font-weight:600}
   .tool small{color:var(--muted);font-size:.78rem}
 
+
+  /* ---------- Enroll ---------- */
+  .btn-enroll{margin-top:22px;background:var(--grad);color:var(--plum);box-shadow:0 8px 20px rgba(229,127,165,.35);position:relative;overflow:hidden}
+  .btn-enroll::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);transform:skewX(-20deg);animation:sheen 3.5s ease-in-out infinite}
+  @keyframes sheen{0%,60%{left:-60%}100%{left:130%}}
+  .enroll{
+    margin-top:48px;display:grid;grid-template-columns:1fr 1.25fr;gap:32px;align-items:start;
+    background:var(--card);border-radius:28px;padding:34px;box-shadow:var(--shadow);border:1px solid var(--line);
+    position:relative;overflow:hidden;scroll-margin-top:20px;
+  }
+  .enroll::before{content:"";position:absolute;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,var(--rose-soft),transparent 70%);top:-120px;left:-120px;pointer-events:none}
+  .enroll > *{position:relative}
+  .eyebrow{display:inline-block;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--rose-deep);background:var(--rose-soft);padding:4px 12px;border-radius:999px}
+  .enroll-intro h3{font-size:1.6rem;color:var(--plum);font-weight:700;margin:10px 0 8px;line-height:1.2}
+  .enroll-intro > p{color:var(--muted);font-size:.95rem}
+  .more{margin-top:18px;padding:16px;border-radius:16px;background:linear-gradient(135deg,var(--lav-soft),var(--rose-soft));border:1px dashed var(--lav)}
+  .more b{display:block;color:var(--plum);font-size:.95rem;margin-bottom:4px}
+  .more span{color:var(--ink);font-size:.87rem}
+  .perks{list-style:none;margin-top:16px;display:grid;gap:8px}
+  .perks li{font-size:.9rem;color:var(--plum);font-weight:500}
+  .enroll-form{display:grid;gap:14px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .field{display:grid;gap:6px}
+  .field label{font-size:.84rem;font-weight:600;color:var(--plum)}
+  .field label i{color:var(--rose-deep);font-style:normal}
+  .field input,.field select,.field textarea{
+    width:100%;font:inherit;font-size:16px;color:var(--ink);background:#fffafc;border:1.5px solid var(--line);
+    border-radius:14px;padding:12px 14px;min-height:48px;transition:border-color .2s,box-shadow .2s,background .2s;
+  }
+  .field textarea{resize:vertical;min-height:90px}
+  .field select{appearance:none;-webkit-appearance:none;padding-right:40px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e57fa5' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center;background-size:18px}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--rose);background:#fff;box-shadow:0 0 0 4px rgba(247,178,204,.3)}
+  .field.invalid input,.field.invalid select{border-color:var(--rose-deep);background:#fff3f7}
+  .form-error{color:#c2436f;font-size:.86rem;font-weight:500;background:#fff0f5;border-radius:12px;padding:10px 14px}
+  .send{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
+  .send .btn-mail{border:1.5px solid var(--line)}
+  .form-note{font-size:.8rem;color:var(--muted);text-align:center}
+
   /* ---------- Install tip ---------- */
   .tip{
     margin-top:44px;border-radius:var(--radius);padding:26px;
@@ -292,6 +332,8 @@
     .grid{grid-template-columns:1fr}
     .tools{grid-template-columns:1fr}
     .tip{grid-template-columns:1fr;padding:20px}
+    .enroll{grid-template-columns:1fr;padding:22px;gap:22px}
+    .row2,.send{grid-template-columns:1fr}
     .steps{grid-template-columns:1fr}
     footer .wrap{flex-direction:column;align-items:flex-start}
     .fab-label{display:none}
@@ -354,6 +396,7 @@
         <div class="stat"><b>4</b><small>Study Tools</small></div>
         <div class="stat"><b>24/7</b><small>Access</small></div>
       </div>
+      <a class="btn btn-enroll" href="#enroll">✨ Enroll Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
     </div>
 
     <figure class="portrait">
@@ -363,7 +406,7 @@
       <span class="wave" aria-hidden="true">👋</span>
       <figcaption>
         <b>Hi, I'm Ms. Maria!</b>
-        <span>Your tutor &amp; guide at Learnovate Qatar</span>
+        <span>Course Counsellor &amp; Instructor</span>
       </figcaption>
     </figure>
     </div>
@@ -499,6 +542,110 @@
         <span class="ti" aria-hidden="true">☕</span><span><b>Café Study Timer &amp; Music</b><small>Focus sessions</small></span></a>
     </section>
 
+    <!-- ============ ENROLLMENT FORM ============ -->
+    <section class="enroll" id="enroll" aria-labelledby="enrollTitle">
+      <div class="enroll-intro">
+        <span class="eyebrow">Enrollment</span>
+        <h3 id="enrollTitle">Enroll with Ms. Maria</h3>
+        <p>Fill in this short form and your details go straight to Ms. Maria on WhatsApp or email. She'll reply personally to guide you to the right course.</p>
+        <div class="more">
+          <b>🌸 More courses available</b>
+          <span>Don't see your course above? Ms. Maria offers other courses too. Choose <em>"Other course"</em> in the form and tell her what you're looking for.</span>
+        </div>
+        <ul class="perks">
+          <li>💬 Personal course counselling</li>
+          <li>📅 Flexible start dates</li>
+          <li>📱 Study anytime on your phone</li>
+        </ul>
+      </div>
+
+      <form class="enroll-form" id="enrollForm" novalidate>
+        <div class="field">
+          <label for="fName">Full name <i>*</i></label>
+          <input id="fName" name="name" type="text" autocomplete="name" required placeholder="e.g. Aisha Rahman">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="fPhone">WhatsApp / phone <i>*</i></label>
+            <input id="fPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required placeholder="+974 …">
+          </div>
+          <div class="field">
+            <label for="fEmail">Email</label>
+            <input id="fEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com">
+          </div>
+        </div>
+        <div class="field">
+          <label for="fCourse">Course <i>*</i></label>
+          <select id="fCourse" name="course" required>
+            <option value="">Choose a course…</option>
+            <optgroup label="Language &amp; Test Prep">
+              <option>The English Academy</option>
+              <option>The GED Academy</option>
+            </optgroup>
+            <optgroup label="Business &amp; Admin">
+              <option>Business Management Suite</option>
+              <option>HRM Academy</option>
+              <option>Admin &amp; Secretarial Study Hub</option>
+              <option>Customer Care Management Academy</option>
+              <option>Logistics &amp; Supply Chain Management</option>
+            </optgroup>
+            <optgroup label="Healthcare">
+              <option>CNA StudySphere</option>
+              <option>Basic Life Support (BLS)</option>
+              <option>Midwifery Assistant Academy (coming soon)</option>
+            </optgroup>
+            <optgroup label="Teaching &amp; Training">
+              <option>Train the Trainer (coming soon)</option>
+            </optgroup>
+            <optgroup label="Something else">
+              <option value="Other">Other course</option>
+              <option value="Not sure – need advice">Not sure yet, I need advice</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="field" id="otherWrap" hidden>
+          <label for="fOther">Which course? <i>*</i></label>
+          <input id="fOther" name="other" type="text" placeholder="Tell Ms. Maria which course you're looking for">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="fStart">Preferred start</label>
+            <select id="fStart" name="start">
+              <option>As soon as possible</option>
+              <option>Within 1 month</option>
+              <option>In 2–3 months</option>
+              <option>Just enquiring for now</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="fContact">Best time to contact</label>
+            <select id="fContact" name="time">
+              <option>Anytime</option>
+              <option>Morning</option>
+              <option>Afternoon</option>
+              <option>Evening</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="fMsg">Message (optional)</label>
+          <textarea id="fMsg" name="message" rows="3" placeholder="Your current level, goals or any questions…"></textarea>
+        </div>
+        <p class="form-error" id="formError" role="alert" hidden></p>
+        <div class="send">
+          <button type="submit" class="btn btn-wa" data-via="wa">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04.56C5.77.56.66 5.66.66 11.94c0 2 .52 3.96 1.52 5.69L.56 23.5l6.03-1.58a11.4 11.4 0 0 0 5.45 1.39c6.27 0 11.38-5.1 11.38-11.38S18.31.56 12.04.56zm5.43 13.82c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49 2.48 1.07 2.98.86 3.52.8.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/></svg>
+            Send via WhatsApp
+          </button>
+          <button type="submit" class="btn btn-mail" data-via="mail">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+            Send via Email
+          </button>
+        </div>
+        <p class="form-note">Tapping a button opens WhatsApp or your email app with your details filled in. Just press send.</p>
+      </form>
+    </section>
+
     <!-- ============ INSTALL TIP ============ -->
     <section class="tip" aria-labelledby="tipTitle">
       <div class="phone" aria-hidden="true">📱</div>
@@ -540,6 +687,7 @@
       <a href="https://wa.me/97470771337" target="_blank" rel="noopener">WhatsApp</a>
       <a href="mailto:maria@me.learnovateqa.com?subject=Course%20Inquiry%20-%20Elevate%20with%20Ms.%20Maria">Email</a>
       <a href="#courses">Academies</a>
+      <a href="#enroll">Enroll</a>
     </div>
   </div>
 </footer>
@@ -575,7 +723,7 @@
 
 
   /* ---------- Scroll reveal animation ---------- */
-  var revealEls = document.querySelectorAll('.tabs, .section-head, .card, .tool, .tip');
+  var revealEls = document.querySelectorAll('.tabs, .section-head, .card, .tool, .tip, .enroll');
   if ('IntersectionObserver' in window) {
     revealEls.forEach(function (el, i) {
       el.classList.add('reveal');
@@ -592,6 +740,63 @@
     }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
     revealEls.forEach(function (el) { io.observe(el); });
   }
+
+
+  /* ---------- Enrollment form -> WhatsApp / Email ---------- */
+  var WA_NUMBER = '97470771337';
+  var EMAIL = 'maria@me.learnovateqa.com';
+  var form = document.getElementById('enrollForm');
+  var courseSel = document.getElementById('fCourse');
+  var otherWrap = document.getElementById('otherWrap');
+  var errBox = document.getElementById('formError');
+  var via = 'wa';
+  form.querySelectorAll('button[data-via]').forEach(function (b) {
+    b.addEventListener('click', function () { via = b.dataset.via; });
+  });
+  courseSel.addEventListener('change', function () {
+    otherWrap.hidden = courseSel.value !== 'Other';
+    if (!otherWrap.hidden) document.getElementById('fOther').focus();
+  });
+  form.addEventListener('input', function (e) {
+    var f = e.target.closest('.field'); if (f) f.classList.remove('invalid');
+  });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = function (id) { return document.getElementById(id).value.trim(); };
+    var missing = [];
+    function need(id, label) { if (!v(id)) { missing.push(label); document.getElementById(id).closest('.field').classList.add('invalid'); } }
+    need('fName', 'your name'); need('fPhone', 'your phone number'); need('fCourse', 'a course');
+    if (v('fCourse') === 'Other') need('fOther', 'which course you want');
+    var em = v('fEmail');
+    if (em && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { missing.push('a valid email'); document.getElementById('fEmail').closest('.field').classList.add('invalid'); }
+    if (missing.length) {
+      errBox.textContent = 'Please add ' + missing.join(', ') + '.';
+      errBox.hidden = false;
+      var first = form.querySelector('.field.invalid input, .field.invalid select'); if (first) first.focus();
+      return;
+    }
+    errBox.hidden = true;
+    var course = v('fCourse') === 'Other' ? 'Other: ' + v('fOther') : v('fCourse');
+    var lines = [
+      'NEW ENROLLMENT REQUEST',
+      '',
+      'Name: ' + v('fName'),
+      'Phone/WhatsApp: ' + v('fPhone'),
+      'Email: ' + (em || '-'),
+      'Course: ' + course,
+      'Preferred start: ' + v('fStart'),
+      'Best time to contact: ' + v('fContact'),
+      'Message: ' + (v('fMsg') || '-'),
+      '',
+      'Sent from the Elevate with Ms. Maria student portal'
+    ];
+    var text = lines.join('\n');
+    if (via === 'mail') {
+      location.href = 'mailto:' + EMAIL + '?subject=' + encodeURIComponent('Enrollment Request - ' + course + ' - ' + v('fName')) + '&body=' + encodeURIComponent(text);
+    } else {
+      window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
+    }
+  });
 
   /* ---------- Home-screen icon + web app manifest (generated inline) ---------- */
   function makeIcon(size) {
