@@ -279,7 +279,26 @@
   .price .ask b{font-size:.95rem}
   .btn-sm{min-height:44px;border-radius:12px;font-size:.88rem;width:100%;background:var(--accent-grad);background-size:200% auto;color:var(--plum);transition:background-position .5s,box-shadow .3s,transform .2s}
   .btn-sm:hover{background-position:right center;box-shadow:0 6px 14px rgba(160,100,140,.2)}
-  .cat-more{text-align:center;margin-top:20px}
+
+  .cgroups{display:grid;gap:14px}
+  .cgroup{background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;transition:box-shadow .25s}
+  .cgroup[open]{background:linear-gradient(180deg,var(--accent-soft),rgba(255,255,255,.75) 140px)}
+  .cgroup summary{list-style:none;display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;min-height:72px;-webkit-tap-highlight-color:transparent}
+  .cgroup summary::-webkit-details-marker{display:none}
+  .cgroup summary:hover .gc{background:var(--accent);color:#fff}
+  .cgroup summary:focus-visible{outline:3px solid var(--lav-deep);outline-offset:-3px;border-radius:22px}
+  .gi{width:48px;height:48px;border-radius:15px;background:#fff;display:grid;place-items:center;font-size:1.45rem;flex-shrink:0;box-shadow:0 3px 10px rgba(160,100,140,.12);border:2px solid var(--accent)}
+  .gt{flex:1;min-width:0}
+  .gt b{display:block;color:var(--plum);font-size:1.05rem;font-weight:700;line-height:1.3}
+  .gt small{display:block;color:var(--muted);font-size:.8rem}
+  .gc{width:36px;height:36px;border-radius:50%;background:var(--accent-soft);color:var(--accent-text);display:grid;place-items:center;flex-shrink:0;transition:transform .35s cubic-bezier(.3,1.4,.5,1),background .2s,color .2s}
+  .gc svg{width:18px;height:18px}
+  .cgroup[open] .gc{transform:rotate(180deg)}
+  .cgroup .cgrid{padding:4px 18px 20px}
+  .cgroup .cname{display:none}
+  .cgroup .course .top{align-items:center}
+  .cgroup[open] .cgrid{animation:pop .4s cubic-bezier(.2,.7,.2,1)}
+
   .btn-more{background:#fff;color:var(--plum);border:1.5px solid var(--rose)}
   .btn-more:hover{background:var(--rose-soft)}
   .fee-note{margin-top:16px;font-size:.8rem;color:var(--muted);text-align:center;max-width:720px;margin-left:auto;margin-right:auto}
@@ -404,6 +423,9 @@
     .toggle{width:100%}
     .search{flex-basis:100%}
     .cgrid{grid-template-columns:1fr}
+    .cgroup summary{padding:14px}
+    .cgroup .cgrid{padding:4px 12px 14px}
+    .gt b{font-size:.98rem}
     .hero-cta .btn{flex:1}
     .steps{grid-template-columns:1fr}
     footer .wrap{flex-direction:column;align-items:flex-start}
@@ -628,7 +650,7 @@
       <div class="cat-controls">
         <label class="search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <input id="catSearch" type="search" placeholder="Search courses e.g. nursing, IELTS, barista…" aria-label="Search courses" autocomplete="off">
+          <input id="catSearch" type="search" placeholder="Search e.g. nursing, IELTS…" aria-label="Search courses" autocomplete="off">
         </label>
         <label class="toggle">
           <input type="checkbox" id="intlOnly">
@@ -640,8 +662,7 @@
       <div class="chips" id="catChips" role="tablist" aria-label="Course categories"></div>
 
       <p class="cat-status" id="catStatus" aria-live="polite"></p>
-      <div class="cgrid" id="catGrid"></div>
-      <div class="cat-more"><button class="btn btn-more" id="catMore" type="button">Show more courses</button></div>
+      <div class="cgroups" id="catGrid"></div>
       <p class="fee-note">Fees are in Qatari Riyal (QAR). <b>One-time</b> = pay in full, <b>Instalment</b> = total when paying in parts. Timing is per class. Fees may change, so please confirm with Ms. Maria when you enroll.</p>
     </section>
 
@@ -1045,10 +1066,9 @@
     courseSel.insertBefore(g, otherGroup);
   });
 
-  var cState = { cat: 'all', q: '', intl: false, limit: 12 };
+  var cState = { cat: 'all', q: '', intl: false };
   var chipsEl = document.getElementById('catChips');
   var gridEl = document.getElementById('catGrid');
-  var moreBtn = document.getElementById('catMore');
   var statusEl = document.getElementById('catStatus');
   var catClass = { health: 'c-health', teach: 'c-teach', mgmt: 'c-mgmt', prof: 'c-prof', safety: 'c-safety', beauty: 'c-beauty', lang: 'c-lang' };
 
@@ -1058,17 +1078,16 @@
   chipsEl.innerHTML = chip('all', '✨ All', ALL.length) + CATALOG.map(function (c) { return chip(c.id, c.icon + ' ' + esc(c.name), c.courses.length); }).join('');
   chipsEl.addEventListener('click', function (e) {
     var b = e.target.closest('.chip'); if (!b) return;
-    cState.cat = b.dataset.cat; cState.limit = 12;
+    cState.cat = b.dataset.cat;
     chipsEl.querySelectorAll('.chip').forEach(function (c) { c.setAttribute('aria-selected', c === b ? 'true' : 'false'); });
     renderCatalog();
   });
   var searchTimer;
   document.getElementById('catSearch').addEventListener('input', function (e) {
     clearTimeout(searchTimer);
-    searchTimer = setTimeout(function () { cState.q = e.target.value.trim().toLowerCase(); cState.limit = 12; renderCatalog(); }, 120);
+    searchTimer = setTimeout(function () { cState.q = e.target.value.trim().toLowerCase(); renderCatalog(); }, 120);
   });
-  document.getElementById('intlOnly').addEventListener('change', function (e) { cState.intl = e.target.checked; cState.limit = 12; renderCatalog(); });
-  moreBtn.addEventListener('click', function () { cState.limit += 12; renderCatalog(true); });
+  document.getElementById('intlOnly').addEventListener('change', function (e) { cState.intl = e.target.checked; renderCatalog(); });
 
   function courseCard(c, i) {
     var tags = [];
@@ -1095,26 +1114,47 @@
       '</article>';
   }
 
-  function renderCatalog(keepScroll) {
+  var openGroups = { health: true };   // which categories start open
+  function renderCatalog() {
     var words = cState.q.split(/\s+/).filter(Boolean);
-    var list = ALL.filter(function (c) {
-      if (cState.cat !== 'all' && c.cat.id !== cState.cat) return false;
-      if (cState.intl && c.intl !== 1) return false;
-      if (!words.length) return true;
-      var hay = (c.name + ' ' + c.cat.name).toLowerCase();
-      return words.every(function (w) { return hay.indexOf(w) > -1; });
-    });
-    var shown = list.slice(0, cState.limit);
-    if (!list.length) {
-      gridEl.innerHTML = '<div class="empty"><b>No courses match your search</b><p>Ms. Maria may still be able to help. Tell her what you are looking for.</p>' +
+    var filtering = words.length > 0 || cState.intl;
+    var total = 0, groups = 0;
+    var html = CATALOG.map(function (cat) {
+      if (cState.cat !== 'all' && cat.id !== cState.cat) return '';
+      var list = ALL.filter(function (c) {
+        if (c.cat !== cat) return false;
+        if (cState.intl && c.intl !== 1) return false;
+        if (!words.length) return true;
+        var hay = (c.name + ' ' + c.cat.name).toLowerCase();
+        return words.every(function (w) { return hay.indexOf(w) > -1; });
+      });
+      if (!list.length) return '';
+      total += list.length; groups++;
+      var fees = list.filter(function (c) { return c.one != null; }).map(function (c) { return c.one; });
+      var from = SHOW_PRICES && fees.length ? ' · from ' + qar(Math.min.apply(null, fees)) : '';
+      var intl = list.filter(function (c) { return c.intl === 1; }).length;
+      var open = filtering || cState.cat !== 'all' || openGroups[cat.id];
+      return '<details class="cgroup ' + catClass[cat.id] + '" data-group="' + cat.id + '"' + (open ? ' open' : '') + '>' +
+        '<summary><span class="gi" aria-hidden="true">' + cat.icon + '</span>' +
+        '<span class="gt"><b>' + esc(cat.name) + '</b><small>' + list.length + ' course' + (list.length === 1 ? '' : 's') + from +
+        (intl ? ' · 🌍 ' + intl + ' international' : '') + '</small></span>' +
+        '<span class="gc" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></summary>' +
+        '<div class="cgrid">' + list.map(courseCard).join('') + '</div></details>';
+    }).join('');
+    if (!total) {
+      html = '<div class="empty"><b>No courses match your search</b><p>Ms. Maria may still be able to help. Tell her what you are looking for.</p>' +
         '<button class="btn btn-enroll" type="button" data-enroll="Other">Ask about another course →</button></div>';
-    } else {
-      gridEl.innerHTML = shown.map(courseCard).join('');
     }
-    statusEl.textContent = list.length ? 'Showing ' + shown.length + ' of ' + list.length + ' course' + (list.length === 1 ? '' : 's') : '';
-    moreBtn.parentElement.hidden = shown.length >= list.length;
-    moreBtn.textContent = 'Show more courses (' + (list.length - shown.length) + ' more)';
+    gridEl.innerHTML = html;
+    statusEl.textContent = !total ? '' : filtering
+      ? total + ' matching course' + (total === 1 ? '' : 's') + ' in ' + groups + ' categor' + (groups === 1 ? 'y' : 'ies')
+      : cState.cat === 'all' ? 'Tap a category to open it.' : '';
   }
+  // remember which groups the student opened or closed
+  gridEl.addEventListener('toggle', function (e) {
+    var d = e.target; if (!d.dataset || !d.dataset.group) return;
+    if (!cState.q && !cState.intl && cState.cat === 'all') openGroups[d.dataset.group] = d.open;
+  }, true);
   renderCatalog();
 
   // "Enroll" on a course -> pre-select it in the form and scroll there
