@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Calling Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Rendered by make-cards.js. MODE is replaced with: print | sheet | preview */
+  :root{
+    --plum:#5a3d6e; --muted:#8a7896; --rose:#f7b2cc; --rose-deep:#e57fa5; --rose-soft:#fde8f0;
+    --lav:#cdb8f5; --lav-deep:#9b7fd9; --lav-soft:#f1eafd; --mint:#b9e8d6; --mint-soft:#e6f7f0;
+    --sky:#b8d8f8; --sky-deep:#4a8bd0; --sky-soft:#eaf3fd; --peach:#ffd4bd; --wa:#3ccf7f;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#fff;font-family:"Poppins",sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact;color:var(--plum)}
+
+  /* ---- one card: trim 85x55mm, plus bleed (b) on each side ---- */
+  .card{position:relative;overflow:hidden;width:calc(85mm + 2 * var(--b));height:calc(55mm + 2 * var(--b))}
+  .safe{position:absolute;inset:calc(var(--b) + 4.5mm)}
+
+  /* FRONT */
+  .front{background:linear-gradient(125deg,#fde2ec 0%,#f3e8fd 48%,#ffeadf 78%,#e3f6ee 100%)}
+  .blob{position:absolute;border-radius:50%;opacity:.55}
+  .front .bl1{width:46mm;height:46mm;background:var(--rose);right:-14mm;top:-16mm;opacity:.35}
+  .front .bl2{width:26mm;height:26mm;background:var(--lav);left:-8mm;bottom:-10mm;opacity:.4}
+  .front .bl3{width:9mm;height:9mm;background:var(--mint);left:calc(var(--b) + 38mm);top:calc(var(--b) + 20mm);opacity:.55}
+  .spark{position:absolute;color:#fff;font-size:7pt;text-shadow:0 0 2mm rgba(229,127,165,.7)}
+  .brand{display:flex;align-items:center;gap:2.2mm}
+  .logo{width:8.5mm;height:8.5mm;border-radius:2.6mm;background:linear-gradient(135deg,var(--rose),var(--lav));display:grid;place-items:center;flex-shrink:0}
+  .logo svg{width:5mm;height:5mm}
+  .brand b{display:block;font-size:8.2pt;font-weight:700;line-height:1.15;color:var(--plum)}
+  .brand small{display:block;font-size:5.2pt;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--rose-deep);margin-top:.4mm}
+  .who{position:absolute;left:0;bottom:0;width:44mm}
+  .who h1{font-size:15pt;font-weight:700;line-height:1.05;letter-spacing:-.01em}
+  .who .line{width:9mm;height:.9mm;border-radius:1mm;background:linear-gradient(90deg,var(--rose),var(--lav));margin:1.6mm 0}
+  .who p{font-size:6.6pt;font-weight:600;color:var(--rose-deep);line-height:1.3}
+  .who span{display:block;font-size:5.6pt;font-weight:400;color:var(--muted);margin-top:.5mm}
+  .photo{position:absolute;right:0;top:50%;transform:translateY(-50%);width:29mm;height:29mm;border-radius:50%;padding:1.1mm;
+    background:conic-gradient(from 20deg,var(--rose),var(--lav),var(--mint),var(--peach),var(--rose));box-shadow:0 2mm 5mm rgba(160,100,140,.25)}
+  .photo::before{content:"";position:absolute;inset:-2mm;border-radius:50%;border:.35mm dashed rgba(229,127,165,.6)}
+  .photo img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:.9mm solid #fff;display:block}
+
+  /* BACK */
+  .back{background-color:#fff9fc;
+    background-image:linear-gradient(rgba(229,127,165,.12) .2mm,transparent .2mm),linear-gradient(90deg,rgba(229,127,165,.12) .2mm,transparent .2mm);
+    background-size:5mm 5mm}
+  .back .strip{position:absolute;left:0;right:0;bottom:0;height:calc(var(--b) + 3mm);background:linear-gradient(90deg,var(--rose),var(--lav),var(--mint),var(--peach))}
+  .back .bl4{width:30mm;height:30mm;background:var(--lav-soft);right:-10mm;top:-12mm;opacity:1}
+  .back .safe{display:flex;gap:4mm;align-items:center;bottom:calc(var(--b) + 6mm)}
+  .qrbox{flex-shrink:0;width:27mm;text-align:center}
+  .qr{width:27mm;height:27mm;background:#fff;border-radius:3mm;padding:1.2mm;box-shadow:0 1mm 3mm rgba(160,100,140,.2);border:.3mm solid var(--rose)}
+  .qr img{width:100%;height:100%;display:block}
+  .qrbox b{display:block;font-size:5.6pt;font-weight:700;margin-top:1.4mm;color:var(--plum);line-height:1.2}
+  .qrbox small{display:block;font-size:4.6pt;color:var(--rose-deep);font-weight:500;line-height:1.25}
+  .info{flex:1;min-width:0}
+  .info h2{font-size:8.4pt;font-weight:700;line-height:1.1}
+  .info .tag{font-size:5.4pt;color:var(--muted);margin:.6mm 0 2.4mm}
+  .row{display:flex;align-items:center;gap:1.8mm;margin-bottom:1.6mm}
+  .ic{width:4.8mm;height:4.8mm;border-radius:1.4mm;display:grid;place-items:center;flex-shrink:0}
+  .ic svg{width:3mm;height:3mm}
+  .row span{font-size:6.3pt;font-weight:500;line-height:1.15;white-space:nowrap}
+  .row small{display:block;font-size:4.4pt;color:var(--muted);font-weight:400;letter-spacing:.06em;text-transform:uppercase}
+
+  /* ---- layouts ---- */
+  body.print{--b:3mm}
+  body.print .card{page-break-after:always;break-after:page}
+  body.preview{--b:0mm;padding:8mm;display:flex;gap:8mm;flex-wrap:wrap;background:#f6f1f4}
+  body.preview .card{border-radius:3mm;box-shadow:0 3mm 10mm rgba(90,61,110,.18)}
+  body.sheet{--b:0mm}
+  .sheet-page{width:210mm;height:297mm;position:relative;page-break-after:always;break-after:page}
+  .grid{position:absolute;left:20mm;top:11mm;display:grid;grid-template-columns:85mm 85mm;grid-auto-rows:55mm}
+  .mark{position:absolute;background:#999}
+  .sheet-note{position:absolute;left:20mm;right:20mm;bottom:3.2mm;font-size:6pt;color:#999;text-align:center}
+</style>
+</head>
+<body class="MODE">
+<!--CARDS-->
+</body>
+</html>
