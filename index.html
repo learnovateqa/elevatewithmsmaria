@@ -171,6 +171,17 @@
   .card a.go svg{width:18px;height:18px;transition:transform .25s}
   .card a.go:hover svg{transform:translateX(4px)}
 
+
+  /* Coming soon card */
+  .card.coming{border:2px dashed var(--mint);background:linear-gradient(180deg,#fff, var(--mint-soft))}
+  .ribbon{
+    position:absolute!important;top:16px;right:-38px;transform:rotate(35deg);z-index:2;
+    background:var(--grad);color:var(--plum);font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    padding:5px 44px;box-shadow:0 4px 10px rgba(160,100,140,.2);
+  }
+  .card.coming .badge{visibility:hidden}
+  .card.coming .icon{animation:bob 3s ease-in-out infinite}
+
   .lang  {--accent:var(--lav);  --accent-soft:var(--lav-soft);  --accent-text:var(--lav-deep);  --accent-grad:linear-gradient(90deg,var(--lav),var(--rose),var(--lav))}
   .biz   {--accent:var(--peach);--accent-soft:var(--peach-soft);--accent-text:var(--peach-deep);--accent-grad:linear-gradient(90deg,var(--peach),var(--rose),var(--peach))}
   .health{--accent:var(--mint); --accent-soft:var(--mint-soft); --accent-text:var(--mint-deep); --accent-grad:linear-gradient(90deg,var(--mint),var(--lav),var(--mint))}
@@ -303,9 +314,10 @@
 
     <div class="hero">
       <h2>All your academies, <span>one portal.</span></h2>
-      <p>Choose your course below to continue learning — English, GED, Healthcare, Business, HR, Admin, Customer Care and Logistics, all in one place.</p>
+      <p>Choose your course below to continue learning — English, GED, Healthcare, Business, HR, Admin, Customer Care and Logistics, with Midwifery coming soon, all in one place.</p>
       <div class="stats">
         <div class="stat"><b>8</b><small>Academies</small></div>
+        <div class="stat"><b>+1</b><small>Coming Soon</small></div>
         <div class="stat"><b>4</b><small>Study Tools</small></div>
         <div class="stat"><b>24/7</b><small>Access</small></div>
       </div>
@@ -318,10 +330,10 @@
 
     <!-- ============ FILTER TABS ============ -->
     <div class="tabs" role="tablist" aria-label="Filter academies by category">
-      <button class="tab" role="tab" aria-selected="true"  data-filter="all">All Academies <span class="count">8</span></button>
+      <button class="tab" role="tab" aria-selected="true"  data-filter="all">All Academies <span class="count">9</span></button>
       <button class="tab" role="tab" aria-selected="false" data-filter="lang">Language &amp; Test Prep <span class="count">2</span></button>
       <button class="tab" role="tab" aria-selected="false" data-filter="biz">Business &amp; Admin <span class="count">5</span></button>
-      <button class="tab" role="tab" aria-selected="false" data-filter="health">Healthcare <span class="count">1</span></button>
+      <button class="tab" role="tab" aria-selected="false" data-filter="health">Healthcare <span class="count">2</span></button>
     </div>
 
     <div class="section-head">
@@ -356,6 +368,14 @@
         <p>Certified Nursing Assistant Levels 4 &amp; 5 with 16 clinical skills, e-workbooks &amp; quizzes.</p>
         <!-- EDIT LINK -->
         <a class="go" href="https://learnovateqa.github.io/CNA_StudySphere/" target="_blank" rel="noopener">Open Academy <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+      </article>
+
+      <article class="card health coming" data-cat="health">
+        <span class="ribbon">Coming Soon</span>
+        <div class="card-top"><div class="icon" aria-hidden="true">👶</div><span class="badge">In Development</span></div>
+        <div><span class="cat">Healthcare</span><h4>Midwifery Assistant Academy</h4></div>
+        <p>Maternal and newborn care training is on its way. Message Ms. Maria to be the first to know when it opens.</p>
+        <a class="go" href="https://wa.me/97470771337?text=Hello%20Ms.%20Maria%2C%20please%20let%20me%20know%20when%20the%20Midwifery%20Assistant%20Academy%20opens." target="_blank" rel="noopener">Notify Me on WhatsApp <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
       </article>
 
       <article class="card biz" data-cat="biz">
@@ -422,7 +442,7 @@
     <section class="tip" aria-labelledby="tipTitle">
       <div class="phone" aria-hidden="true">📱</div>
       <div>
-        <h3 id="tipTitle">Put all 8 academies on your phone</h3>
+        <h3 id="tipTitle">Put all your academies on your phone</h3>
         <p>Install this portal like an app — one icon on your home screen, every course one tap away.</p>
         <div class="steps">
           <div class="step">
