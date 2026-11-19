@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WhatsApp Image</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Rendered by make-social.js. LAYOUT is replaced with: square | status */
+  :root{
+    --plum:#5a3d6e; --muted:#8a7896; --rose:#f7b2cc; --rose-deep:#e57fa5; --rose-soft:#fde8f0;
+    --lav:#cdb8f5; --lav-deep:#9b7fd9; --lav-soft:#f1eafd; --mint:#b9e8d6; --mint-deep:#4fb08c; --mint-soft:#e6f7f0;
+    --sky:#b8d8f8; --sky-deep:#4a8bd0; --sky-soft:#eaf3fd; --peach:#ffd4bd; --peach-deep:#f08c5a; --peach-soft:#fff0e7; --wa:#3ccf7f;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"Poppins",sans-serif;color:var(--plum);overflow:hidden}
+  .canvas{position:relative;overflow:hidden;
+    background:linear-gradient(140deg,#fde2ec 0%,#f3e8fd 45%,#ffeadf 75%,#e3f6ee 100%)}
+  .canvas::before{content:"";position:absolute;inset:0;
+    background-image:linear-gradient(rgba(229,127,165,.12) 2px,transparent 2px),linear-gradient(90deg,rgba(229,127,165,.12) 2px,transparent 2px);
+    background-size:60px 60px}
+  .blob{position:absolute;border-radius:50%}
+  .spark{position:absolute;color:#fff;text-shadow:0 0 18px rgba(229,127,165,.8)}
+
+  .brand{display:flex;align-items:center;gap:20px;position:relative}
+  .logo{width:84px;height:84px;border-radius:26px;background:linear-gradient(135deg,var(--rose),var(--lav));display:grid;place-items:center;box-shadow:0 10px 24px rgba(229,127,165,.35)}
+  .logo svg{width:48px;height:48px}
+  .brand b{display:block;font-size:40px;font-weight:700;line-height:1.1}
+  .brand small{display:block;font-size:20px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--rose-deep);margin-top:4px}
+
+  .headline{position:relative}
+  .headline h1{font-weight:800;line-height:1.05;letter-spacing:-.02em}
+  .headline h1 span{background:linear-gradient(90deg,var(--rose-deep),var(--lav-deep),var(--peach-deep));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .headline p{color:var(--plum);opacity:.85;font-weight:500}
+  .headline p b{color:var(--rose-deep)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:12px;position:relative}
+  .chip{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:10px 20px;font-size:22px;font-weight:600;box-shadow:0 6px 16px rgba(160,100,140,.12);border:2px solid var(--c)}
+
+  .portrait{position:relative;text-align:center}
+  .ring{border-radius:50%;padding:14px;margin:0 auto;position:relative;
+    background:conic-gradient(from 20deg,var(--rose),var(--lav),var(--mint),var(--peach),var(--rose));box-shadow:0 24px 50px rgba(160,100,140,.3)}
+  .ring::before{content:"";position:absolute;inset:-26px;border-radius:50%;border:4px dashed rgba(229,127,165,.55)}
+  .ring img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:10px solid #fff;display:block}
+  .wave{position:absolute;background:#fff;border-radius:50%;display:grid;place-items:center;box-shadow:0 8px 20px rgba(160,100,140,.2)}
+  .nametag{display:inline-block;background:rgba(255,255,255,.9);border-radius:24px;padding:14px 28px;box-shadow:0 10px 24px rgba(160,100,140,.15);position:relative}
+  .nametag b{display:block;font-size:30px;font-weight:700}
+  .nametag span{display:block;font-size:20px;font-weight:600;color:var(--rose-deep)}
+
+  .cta{position:relative;display:flex;align-items:center;gap:30px;background:#fff;border-radius:36px;padding:26px 30px;box-shadow:0 18px 44px rgba(160,100,140,.2);border:3px solid var(--rose)}
+  .qr{width:220px;height:220px;flex-shrink:0}
+  .qr img{width:100%;height:100%;display:block}
+  .cta h3{font-size:34px;font-weight:700;line-height:1.15}
+  .cta .sub{font-size:20px;color:var(--muted);margin:6px 0 16px}
+  .contact{display:flex;align-items:center;gap:12px;font-size:25px;font-weight:600;margin-top:10px;white-space:nowrap}
+  .ic{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;flex-shrink:0}
+  .ic svg{width:26px;height:26px}
+
+  /* ---------- SQUARE 1080x1080 ---------- */
+  body.square .canvas{width:1080px;height:1080px}
+  body.square .brand{position:absolute;left:64px;top:60px}
+  body.square .headline{position:absolute;left:64px;top:200px;width:560px}
+  body.square .headline h1{font-size:72px}
+  body.square .headline p{font-size:26px;margin-top:18px;line-height:1.4}
+  body.square .chips{position:absolute;left:64px;top:520px;width:560px}
+  body.square .portrait{position:absolute;right:44px;top:170px;width:390px}
+  body.square .nametag{padding:14px 22px}
+  body.square .nametag span{font-size:19px;white-space:nowrap}
+  body.square .b-mint{left:48%;top:46%}
+  body.square .b-peach{right:12%;bottom:34%}
+  body.square .ring{width:330px;height:330px}
+  body.square .wave{width:76px;height:76px;font-size:42px;left:0;top:10px}
+  body.square .nametag{margin-top:34px}
+  body.square .cta{position:absolute;left:64px;right:64px;bottom:60px}
+
+  /* ---------- STATUS 1080x1920 ---------- */
+  body.status .canvas{width:1080px;height:1920px}
+  body.status .brand{position:absolute;left:0;right:0;top:110px;justify-content:center}
+  body.status .portrait{position:absolute;left:0;right:0;top:270px}
+  body.status .ring{width:470px;height:470px;padding:18px}
+  body.status .wave{width:96px;height:96px;font-size:52px;left:calc(50% - 250px);top:20px}
+  body.status .nametag{margin-top:46px}
+  body.status .nametag b{font-size:38px}
+  body.status .nametag span{font-size:24px}
+  body.status .headline{position:absolute;left:70px;right:70px;top:990px;text-align:center}
+  body.status .headline h1{font-size:84px}
+  body.status .headline p{font-size:30px;margin-top:22px;line-height:1.4}
+  body.status .chips{position:absolute;left:70px;right:70px;top:1305px;justify-content:center}
+  body.status .b-mint{left:-50px;top:930px}
+  body.status .b-peach{right:-40px;top:860px}
+  body.status .chip{font-size:24px;padding:12px 22px}
+  body.status .cta{position:absolute;left:70px;right:70px;bottom:120px;padding:30px 34px}
+  body.status .qr{width:250px;height:250px}
+  body.status .cta h3{font-size:36px}
+</style>
+</head>
+<body class="LAYOUT">
+<div class="canvas">
+  <div class="blob" style="width:520px;height:520px;background:var(--rose);opacity:.3;right:-160px;top:-180px"></div>
+  <div class="blob" style="width:300px;height:300px;background:var(--lav);opacity:.35;left:-110px;bottom:240px"></div>
+  <div class="blob b-mint" style="width:160px;height:160px;background:var(--mint);opacity:.5"></div>
+  <div class="blob b-peach" style="width:110px;height:110px;background:var(--peach);opacity:.6"></div>
+  <span class="spark" style="left:44%;top:9%;font-size:34px">✦</span>
+  <span class="spark" style="right:7%;top:52%;font-size:26px">✦</span>
+  <span class="spark" style="left:8%;top:47%;font-size:22px">✦</span>
+
+  <div class="brand">
+    <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 21 12h-5v9H8v-9H3z"/></svg></div>
+    <div><b>Elevate with Ms. Maria</b><small>Learnovate Qatar</small></div>
+  </div>
+
+  <div class="portrait">
+    <div class="ring"><img src="PHOTO" alt=""></div>
+    <div class="wave">👋</div>
+    <div class="nametag"><b>Hi, I’m Ms. Maria!</b><span>Course Counsellor &amp; Instructor</span></div>
+  </div>
+
+  <div class="headline">
+    <h1>Your future<br><span>starts here.</span></h1>
+    <p><b>130+ courses</b> with local &amp; international certificates. Flexible timings and instalment plans.</p>
+  </div>
+
+  <div class="chips">
+    <span class="chip" style="--c:var(--mint)">🩺 Healthcare</span>
+    <span class="chip" style="--c:var(--rose)">🍎 Teaching</span>
+    <span class="chip" style="--c:var(--sky)">💼 Business</span>
+    <span class="chip" style="--c:var(--lav)">🗣️ Languages</span>
+    <span class="chip" style="--c:var(--peach)">🦺 Safety</span>
+    <span class="chip" style="--c:#f5b8e0">💅 Beauty</span>
+    <span class="chip" style="--c:var(--lav)">💡 Tech</span>
+  </div>
+
+  <div class="cta">
+    <div class="qr"><img src="QR" alt=""></div>
+    <div>
+      <h3>Scan to browse courses &amp; enroll</h3>
+      <p class="sub">Free course counselling with Ms. Maria</p>
+      <div class="contact"><span class="ic" style="background:var(--wa)"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12.04.56C5.77.56.66 5.66.66 11.94c0 2 .52 3.96 1.52 5.69L.56 23.5l6.03-1.58a11.4 11.4 0 0 0 5.45 1.39c6.27 0 11.38-5.1 11.38-11.38S18.31.56 12.04.56zm5.43 13.82c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49 2.48 1.07 2.98.86 3.52.8.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/></svg></span>+974 7077 1337</div>
+      <div class="contact"><span class="ic" style="background:var(--sky-deep)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg></span>learnovateqa.com</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
