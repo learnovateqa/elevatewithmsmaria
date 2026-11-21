@@ -5,10 +5,13 @@ It takes about 10 minutes, once. Use a computer, not a phone, for the setup.
 
 ## What you get
 
-- Every enrollment request and quiz result from the student portal is saved to the sheet.
+- Every inquiry, online enrollment and quiz result from the student portal is saved to the sheet.
+- Online enrollments arrive as **Applied**, with the payment option and method, and links to the
+  learner's QID photos. The photos are stored in a private Google Drive folder that only you can open
+  ("Elevate Learners - ID documents (private)", created automatically).
 - A private dashboard that only your Google account can open, with:
   - learners, course records, enrollments, conversion rate and repeat enrollees
-  - status for each course: Inquired, Contacted, Visited, Enrolled, Follow-up, Not interested
+  - status for each course: Inquired, Contacted, Visited, Applied, Enrolled, Follow-up, Not interested
   - lead source (School-provided, Social media, Direct, Referral) and counsellor
   - add learners yourself, and add more courses to an existing learner
   - a contact history (calls, WhatsApp, emails, visits, meetings, notes) with "last contacted"
@@ -37,7 +40,8 @@ It takes about 10 minutes, once. Use a computer, not a phone, for the setup.
 4. The log at the bottom should say **Setup OK**.
 
 The script asks to manage your spreadsheets (to save learners), send email as you (for new-inquiry alerts),
-and connect to an external service (so the portal can send it inquiries).
+see and create files in your Google Drive (to store QID photos in your private folder), and connect to an
+external service (so the portal can send it inquiries). Running **setup** also creates the private ID folder.
 
 ## Step 3: Create the inquiry receiver (for the portal)
 
@@ -72,13 +76,22 @@ and the dashboard only opens for the account that owns the sheet.
 
 - **Add counsellors:** type their names in the **Lists** tab, column C. The first name is the default.
 - **Add lead sources or contact types:** add them to the **Lists** tab (columns B and D).
-- **Statuses:** you can add new ones in column A, but don't rename the existing six. The colours
+- **Statuses:** you can add new ones in column A, but don't rename the existing seven. The colours
   and reports use those names.
 - **Editing in the sheet:** you can also edit the **Enrollments** tab directly. Don't change the
   Record ID or Learner ID columns, and don't type in the grey formula columns (Last contacted,
   and everything in the Learner directory and Summary tabs).
-- **Privacy:** the sheet holds students' personal details. Don't share it, and only add people
+- **Payment methods:** the choices students see (cash at the office, bank transfer, card) are listed in
+  `index.html` (the enrollment form) and `PAY_METHODS` in `Dashboard.html`. Ask Claude to change them.
+- **Reviewing an application:** open the learner, check the QID link, confirm payment, then set the status
+  to **Enrolled** (the enrolled date fills in automatically).
+- **Privacy:** the sheet and the ID folder hold students' personal details and ID copies. Don't share it, and only add people
   you trust as editors.
+
+## If you set up the dashboard before online enrollment was added
+
+Paste the new Code.gs and Dashboard.html, run **setup** once more and allow the new Google Drive
+permission, then update both deployments as described below.
 
 ## When the code is updated later
 

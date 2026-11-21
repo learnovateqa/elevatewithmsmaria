@@ -50,5 +50,21 @@ t('doGet owner gets dashboard',()=>{ assert.strictEqual(ctx.doGet().file,'Dashbo
 t('doGet non-owner / anonymous blocked',()=>{ M.state.activeUser=''; assert.ok(ctx.doGet().html.includes('Private')); M.state.activeUser='someone@else.com'; assert.ok(ctx.doGet().html.includes('Private'));});
 t('dashboard functions refuse non-owner',()=>{ ['getDashboardData'].forEach(f=>assert.throws(()=>ctx[f]())); assert.throws(()=>ctx.addLearner({name:'x',phone:'1234567',course:'y'})); assert.throws(()=>ctx.updateRecord('R-0001',{status:'Enrolled'})); assert.throws(()=>ctx.logContact({learnerId:'L-0001',note:'x'})); assert.throws(()=>ctx.updateLearner('L-0001',{name:'x'})); M.state.activeUser='owner@example.com';});
 t('portal still works anonymously',()=>{ M.state.activeUser=''; const r=post({name:'Anon',phone:'+974 7444 5555',course:'Barber',consent:true}); assert.strictEqual(r.ok,true); M.state.activeUser='owner@example.com';});
+
+const IMG='data:image/jpeg;base64,'+Buffer.from('fake-jpeg-bytes').toString('base64');
+t('enrollment: new learner -> Applied, QID saved privately, payment recorded',()=>{ const r=post({type:'enroll',name:'Grace Santos',phone:'+974 3344 5566',course:'Phlebotomy',category:'Health & Social Care',fee:'QAR 2,000 one-time',pay:'Instalment',payMethod:'Bank transfer',source:'Referral',consent:true,idConsent:true,qidFront:IMG,qidBack:IMG});
+  assert.strictEqual(r.ok,true,r.error); const row=E.find(x=>x[0]===r.recordId); assert.strictEqual(row[16],'Applied'); assert.strictEqual(row[9],'Instalment'); assert.strictEqual(row[25],'Bank transfer');
+  assert.match(row[26],/QID front: https:\/\/drive.google.com/); assert.match(row[26],/QID back:/); assert.strictEqual(M.state.files.length,2); assert.strictEqual(M.state.folders.length,1); assert.match(M.state.files[0].name,/Grace Santos - QID front - .*\.jpg$/);
+  assert.match(M.state.mails[M.state.mails.length-1].subject,/Enrollment application/);});
+t('enrollment: reuses the same private folder',()=>{ post({type:'enroll',name:'Ali',phone:'+974 3000 1000',course:'Baking',pay:'One-time payment',payMethod:'Cash',consent:true,idConsent:true,qidFront:IMG}); assert.strictEqual(M.state.folders.length,1);});
+t('enrollment: existing open inquiry becomes Applied (no duplicate row)',()=>{ const before=E.filter(x=>x[0]!=='').length; const r=post({type:'enroll',name:'Omar',phone:'+974 7000 1111',course:'IELTS Preparation',pay:'One-time payment',payMethod:'Card',consent:true,idConsent:true,qidFront:IMG});
+  assert.strictEqual(r.ok,true,r.error); assert.strictEqual(E.filter(x=>x[0]!=='').length,before); const row=E.find(x=>x[0]===r.recordId); assert.strictEqual(row[16],'Applied'); assert.strictEqual(row[25],'Card'); assert.match(row[26],/QID front/);
+  const last=LOG.filter(x=>x[0]!=='').pop(); assert.match(last[7],/enrollment form/);});
+t('enrollment: rejects missing QID / consent / payment',()=>{ assert.strictEqual(post({type:'enroll',name:'X',phone:'+974 3111 2222',course:'Baking',pay:'Instalment',payMethod:'Cash',consent:true,idConsent:true}).ok,false);
+  assert.strictEqual(post({type:'enroll',name:'X',phone:'+974 3111 2222',course:'Baking',pay:'Instalment',payMethod:'Cash',consent:true,qidFront:IMG}).ok,false);
+  assert.strictEqual(post({type:'enroll',name:'X',phone:'+974 3111 2222',course:'Baking',consent:true,idConsent:true,qidFront:IMG}).ok,false);});
+t('enrollment: rejects non-image files',()=>{ const r=post({type:'enroll',name:'X',phone:'+974 3111 2222',course:'Baking',pay:'Instalment',payMethod:'Cash',consent:true,idConsent:true,qidFront:'data:text/html;base64,PGgxPg=='}); assert.strictEqual(r.ok,false); assert.match(r.error,/photo or a PDF/);});
+t('dashboard can edit payment method',()=>{ const id=E.find(x=>x[3]==='Grace Santos')[0]; ctx.updateRecord(id,{payMethod:'Cash'}); assert.strictEqual(E.find(x=>x[0]===id)[25],'Cash');});
+t('dashboard data includes payment method and ID links',()=>{ const d=ctx.getDashboardData(); const g=d.records.find(x=>x.name==='Grace Santos'); assert.strictEqual(g.payMethod,'Cash'); assert.match(g.qid,/QID front/);});
 console.log(ok+' passed');
 

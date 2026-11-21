@@ -20,7 +20,8 @@
             if (v.length !== nr || v[0].length !== nc) throw new Error('setValues size mismatch');
             v.forEach((rv, r) => rv.forEach((x, c) => (data[row - 1 + r][col - 1 + c] = store(x))));
           },
-          setValue(x) { data[row - 1][col - 1] = store(x); }
+          setValue(x) { data[row - 1][col - 1] = store(x); },
+          getValue() { return data[row - 1][col - 1]; }
         };
       }
     };
@@ -32,17 +33,17 @@
     return x;
   }
 
-  const ENR = ['Record ID', 'Learner ID', 'Date added', 'Full name', 'Phone / WhatsApp', 'Email', 'Course', 'Category', 'Listed fee', 'Payment option', 'Study mode', 'Preferred start', 'Best time to contact', 'Lead source', 'Source details', 'Counsellor', 'Status', 'Follow-up date', 'Enrolled date', 'Notes', "Learner's message", 'Added via', 'Last updated', 'Consent to contact', 'Last contacted'];
+  const ENR = ['Record ID', 'Learner ID', 'Date added', 'Full name', 'Phone / WhatsApp', 'Email', 'Course', 'Category', 'Listed fee', 'Payment option', 'Study mode', 'Preferred start', 'Best time to contact', 'Lead source', 'Source details', 'Counsellor', 'Status', 'Follow-up date', 'Enrolled date', 'Notes', "Learner's message", 'Added via', 'Last updated', 'Consent to contact', 'Last contacted', 'Payment method', 'ID documents'];
   const sheets = {
-    'Enrollments': makeSheet('Enrollments', ENR, 1000, 25),
+    'Enrollments': makeSheet('Enrollments', ENR, 1000, 27),
     'Contact log': makeSheet('Contact log', ['Date and time', 'Log ID', 'Learner ID', 'Learner name', 'Record ID', 'Course', 'Contact type', 'Note', 'Status after contact', 'Next follow-up', 'Logged by'], 2000, 11),
     'Quiz results': makeSheet('Quiz results', ['Date', 'Interest', 'Goal', 'International certificate', 'Budget', 'Suggested courses'], 1000, 8),
     'Lists': makeSheet('Lists', ['Status', 'Lead source', 'Counsellor', 'Contact type'], 50, 4)
   };
-  const L = [['Inquired', 'School-provided', 'Ms. Maria', 'Call'], ['Contacted', 'Social media', '', 'WhatsApp'], ['Visited', 'Direct', '', 'Email'], ['Enrolled', 'Referral', '', 'Visit'], ['Follow-up', '', '', 'Meeting'], ['Not interested', '', '', 'Note']];
+  const L = [['Inquired', 'School-provided', 'Ms. Maria', 'Call'], ['Contacted', 'Social media', '', 'WhatsApp'], ['Visited', 'Direct', '', 'Email'], ['Applied', 'Referral', '', 'Visit'], ['Enrolled', '', '', 'Meeting'], ['Follow-up', '', '', 'Note'], ['Not interested', '', '', '']];
   L.forEach((r, i) => r.forEach((v, j) => (sheets.Lists._data[i + 1][j] = v)));
 
-  const state = { activeUser: 'owner@example.com', owner: 'owner@example.com', mails: [] };
+  const state = { activeUser: 'owner@example.com', owner: 'owner@example.com', mails: [], files: [], folders: [], props: {} };
   root.__mock = { sheets, state };
   root.SpreadsheetApp = {
     getActiveSpreadsheet() {
@@ -54,7 +55,24 @@
   root.LockService = { getScriptLock: () => ({ waitLock() {}, releaseLock() {} }) };
   root.MailApp = { sendEmail: (o) => state.mails.push(o), getRemainingDailyQuota: () => 100 };
   root.Logger = { log() {} };
+  root.PropertiesService = { getScriptProperties: () => ({ getProperty: (k) => state.props[k] || null, setProperty: (k, v) => { state.props[k] = v; } }) };
+  function folder(id, name) {
+    return { getId: () => id, setDescription() {}, createFile(blob) {
+      const f = { id: 'F' + (state.files.length + 1), name: blob.name, type: blob.type, size: blob.bytes.length, folder: id };
+      state.files.push(f); return { getUrl: () => 'https://drive.google.com/file/d/' + f.id + '/view' }; } };
+  }
+  root.DriveApp = {
+    createFolder(name) { const id = 'FOLDER' + (state.folders.length + 1); state.folders.push({ id, name }); return folder(id, name); },
+    getFolderById(id) { if (!state.folders.some((f) => f.id === id)) throw new Error('not found'); return folder(id); }
+  };
   root.Utilities = {
+    base64Decode(b64) {
+      const A = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/', out = [];
+      let buf = 0, bits = 0;
+      for (const ch of b64.replace(/=+$/, '')) { buf = (buf << 6) | A.indexOf(ch); bits += 6; if (bits >= 8) { bits -= 8; out.push((buf >> bits) & 255); } }
+      return out;
+    },
+    newBlob(bytes, type, name) { return { bytes, type, name }; },
     formatDate(d, tz, fmt) {
       const p = (n) => String(n).padStart(2, '0');
       const s = d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());

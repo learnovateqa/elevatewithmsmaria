@@ -89,6 +89,7 @@
   .s-Inquired{background:var(--rose-soft);color:#c2436f}
   .s-Contacted{background:var(--sky-soft);color:#2f6faf}
   .s-Visited{background:var(--lav-soft);color:#7a5ac0}
+  .s-Applied{background:#fff6dc;color:#a0720a}
   .s-Enrolled{background:#ddf4ea;color:#2f7d62}
   .s-Follow-up{background:var(--peach-soft);color:#c0602f}
   .s-Not-interested{background:var(--grey-soft);color:#777}
@@ -142,6 +143,10 @@
   textarea.f{min-height:70px;resize:vertical}
   .rec{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;border-left:5px solid var(--rose)}
   .rec.Enrolled{border-left-color:var(--mint)}
+  .rec.Applied{border-left-color:#f6d27a}
+  .docs{display:flex;gap:6px;flex-wrap:wrap;margin:-2px 0 10px}
+  .docs a{display:inline-flex;align-items:center;gap:5px;font-size:.76rem;font-weight:600;color:var(--plum);background:#fff6dc;border:1px solid #f6d27a;border-radius:99px;padding:3px 10px;text-decoration:none}
+  .docs a:hover{background:#ffeeb8}
   .rec.Visited{border-left-color:var(--lav)}
   .rec.Contacted{border-left-color:var(--sky)}
   .rec.Follow-up{border-left-color:var(--peach)}
@@ -297,6 +302,7 @@
         <div class="fld"><label>Counsellor</label><select class="f" name="counsellor"></select></div>
         <div class="fld"><label>Status</label><select class="f" name="status"></select></div>
         <div class="fld"><label>Payment option</label><select class="f" name="pay"><option value="">Not decided</option><option>One-time payment</option><option>Instalment</option></select></div>
+        <div class="fld"><label>Payment method</label><select class="f" name="payMethod"></select></div>
         <div class="fld"><label>Study mode</label><select class="f" name="mode"><option value="">No preference</option><option>Online</option><option>In person</option></select></div>
         <div class="fld"><label>Follow-up date</label><input class="f" name="followUp" type="date"></div>
         <div class="fld"><label>Preferred start</label><input class="f" name="start" placeholder="e.g. January"></div>
@@ -316,11 +322,16 @@
 /* Course catalogue (from the student portal) for the course picker */
 var CATALOG = [["Health & Social Care","Certified Nursing Assistant – Level 4",2000,2300],["Health & Social Care","Certified Nursing Assistant – Level 5",2500,2800],["Health & Social Care","Certified Nursing Assistant – Level 6",3000,3500],["Health & Social Care","Certified Nursing Assistant – Level 7",4000,4500],["Health & Social Care","Nursing Assistant – Level 4 & 5 Combo",3000,3500],["Health & Social Care","Nursing Assistant – Level 6 & 7 Combo",4000,4500],["Health & Social Care","Pharmacy Assistant – Level 4",2500,2800],["Health & Social Care","Medical Coding",3500,4000],["Health & Social Care","Certified Physiotherapy Assistant – Level 4",3300,3600],["Health & Social Care","Medical Receptionist",3500,3800],["Health & Social Care","Caregiver – Level 4",1500,1800],["Health & Social Care","Dental Assistant – Level 4",2200,2500],["Health & Social Care","Professional Massage Therapist – Level 4",1700,2000],["Health & Social Care","Professional Massage Therapist – Level 4 & 5 Combo",2200,2500],["Health & Social Care","Professional Massage Therapist – Level 6 & 7 Combo",3500,3800],["Health & Social Care","Midwifery",2000,2300],["Health & Social Care","CSSD Technician",3500,4000],["Health & Social Care","Nanny",2000,2500],["Health & Social Care","Biomedical Equipment Assistant – Level 4",3500,3800],["Health & Social Care","Microbiology – Level 4",3200,3500],["Health & Social Care","Ambulance Care Assistant – Level 4",2200,2500],["Health & Social Care","ECG Interpretation & Cardiac Rhythm Analysis",3000,3500],["Health & Social Care","Phlebotomy",2000,2500],["Health & Social Care","Basic Life Support (BLS)",null,null],["Teaching & Education","Advanced Phonics & Sound-Based Teaching",1700,2000],["Teaching & Education","Special Needs Education – Level 4",1700,2000],["Teaching & Education","Child Psychology – Level 4",1700,2000],["Teaching & Education","Pre & Primary Teachers Training – Level 4",1700,2000],["Teaching & Education","Certified Teachers Assistant – Level 4",1700,2000],["Teaching & Education","Early Childhood Education – Level 4",1700,2000],["Teaching & Education","Montessori Teachers Training – Level 4",1700,2000],["Teaching & Education","Pre & Primary Teachers Training – Level 5 & 6",2500,2800],["Teaching & Education","Graduate Diploma in Teaching & Learning – Level 6",3500,3800],["Teaching & Education","PGC Counselling Psychology – Level 7",3500,3800],["Teaching & Education","PGC Pre & Primary Teacher Training – Level 7",3500,3800],["Teaching & Education","PGC in Special Needs Education – Level 7",3500,3800],["Teaching & Education","PGC in Early Years Education – Level 7",3500,3800],["Teaching & Education","PGC Clinical Psychology – Level 7",3500,3800],["Teaching & Education","Train the Trainer",null,null],["Management","Business Management – Level 4",1500,1800],["Management","PGC Business Management – Level 7",3500,3800],["Management","Human Resources Management – Level 4",1500,1800],["Management","Human Resources & Management – Level 5 & 6",2500,3000],["Management","Senior Professional in Human Resources",2500,3000],["Management","Admin & Secretarial – Level 4",1500,1800],["Management","Customer Care Management – Level 4 & 5",null,null],["Management","Hospitality & Tourism Management – Level 4",1500,1800],["Management","Hospitality & Tourism Management – Level 5",2500,2800],["Management","Housekeeping Management – Level 4",1500,1800],["Management","Supply Chain Management – Level 4",1500,1800],["Management","Logistics & Supply Chain Management – Level 5",2500,3000],["Management","PGC in Logistics & Supply Chain Management – Level 7",3500,3800],["Management","Inventory & Warehouse Management – Level 4",1500,1800],["Management","Learning Management System (LMS)",2000,2500],["Management","Sales & Marketing – Level 4",1500,1800],["Management","Accounting & Finance Management – Level 4",1500,1800],["Management","Document Control Management – Level 4",1500,1800],["Management","Data Management & Office System",1500,1800],["Management","Data Entry & Data Management",2500,3000],["Management","Salon Management & Operations – Level 4",2000,2300],["Management","Risk Management – Level 4",1500,1800],["Management","Cashier Operations & Point of Sale Management",1500,1800],["Management","Taxation, Revenue & Income Management – Level 4",3000,3500],["Management","Cruise Ship Management – Level 4",2500,3000],["Management","Paralegal Studies & Legal Administration",2500,3000],["Professional & Tech","Graphic Designing",2000,2500],["Professional & Tech","Web Designing",3000,3500],["Professional & Tech","Basic Computer",1000,1300],["Professional & Tech","Microsoft Office Training",1000,1500],["Professional & Tech","Information Technology",2000,2500],["Professional & Tech","Cyber Security & Ethical Hacking",1500,1800],["Professional & Tech","Digital Marketing",1500,1800],["Professional & Tech","Artificial Intelligence Tools for Productivity & Business",1000,1300],["Professional & Tech","Claude AI & AI Productivity – Level 4",2000,2500],["Professional & Tech","Python Programming for Kids",1700,2000],["Professional & Tech","AutoCAD",2500,3000],["Professional & Tech","Interior Designing",3500,4000],["Professional & Tech","Video Editing",2500,3000],["Professional & Tech","Film Making & Digital Cinematography – Level 4",3000,3300],["Professional & Tech","Professional Photography",2000,2500],["Professional & Tech","Airport Ground Staff Operations – Level 4",2500,3000],["Professional & Tech","Aviation, Travel & Tourism Management",1500,2000],["Professional & Tech","Travel & Tourism – Level 4",1500,2000],["Professional & Tech","Public Relations Officer (PRO)",1500,2000],["Professional & Tech","Butler",1500,2000],["Professional & Tech","Certified Barista Training",900,1300],["Professional & Tech","Culinary",2500,3000],["Professional & Tech","Baking",1500,2000],["Professional & Tech","Mixology & Bartending",1500,2000],["Professional & Tech","Face Painting",2000,2500],["Professional & Tech","Henna",900,1300],["Professional & Tech","Carpet & Upholstery Cleaning",1000,1300],["Professional & Tech","Car Detailing & Automotive Surface Care – Level 4",3000,3500],["Professional & Tech","Plumbing Technician",1500,2000],["Professional & Tech","Electrical Systems Testing & Commissioning – Level 4",3500,4000],["Professional & Tech","Professional Certificate in Maintenance & Field Service Engineering – Level 4",2500,3000],["Professional & Tech","Hygiene & Safety Training – Level 4",1700,2000],["Health & Safety","Safety Officer",1300,1500],["Health & Safety","IOSH",800,null],["Health & Safety","OSHA",800,null],["Health & Safety","Health & Safety – Level 7",5000,5300],["Health & Safety","Food Safety – Level 3",1000,1500],["Health & Safety","Food Safety – Level 4",1500,2000],["Health & Safety","Food Safety – Level 5",2500,3000],["Health & Safety","Food Safety – Level 6",3000,3500],["Health & Safety","Food Safety – Level 7",3500,4000],["Health & Safety","Water & Wastewater Treatment Technology",2000,2500],["Health & Safety","Environmental Officer",1300,1500],["Health & Safety","Security Management – Level 4",2000,2500],["Health & Safety","HVAC Technician – Level 4",1500,1800],["Health & Safety","Powerboat Handling & Marine Safety",4000,4500],["Beauty & Fashion","Facial Course",2200,2500],["Beauty & Fashion","Hair Styling",1500,2000],["Beauty & Fashion","Nail Technician",1500,2000],["Beauty & Fashion","Make-up",1500,2000],["Beauty & Fashion","Eyelash Technician",1500,2000],["Beauty & Fashion","Professional Waxing & Hair Removal",2000,2300],["Beauty & Fashion","Barber",1500,2000],["Beauty & Fashion","Fashion Designer",2500,3000],["Language & Test Prep","Basic English for Beginners",1000,1500],["Language & Test Prep","Business English",1500,2000],["Language & Test Prep","Spoken Arabic",1000,1500],["Language & Test Prep","TEFL",1500,1800],["Language & Test Prep","IELTS Preparation",1000,1500],["Language & Test Prep","PTE Preparation",1000,1500],["Language & Test Prep","OET",1500,2000],["Language & Test Prep","Duolingo English Test Preparation",1500,1800],["Language & Test Prep","CELPIP",1500,1800],["Language & Test Prep","SAT Preparation",2500,3000],["Language & Test Prep","GED",4000,4500],["Language & Test Prep","PMP",1500,2000],["Language & Test Prep","ITIL",2000,2500],["Career Services","CV Writing & Review",null,null],["Career Services","Recommendation Letter",null,null],["Career Services","Mock Interview Practice",null,null],["Career Services","Prep-Test",null,null]];
 
-var STATUS_COLORS = { 'Inquired': '#f7b2cc', 'Contacted': '#b8d8f8', 'Visited': '#cdb8f5', 'Enrolled': '#9fdcc3', 'Follow-up': '#ffc9a8', 'Not interested': '#d6d3d8' };
+var STATUS_COLORS = { 'Inquired': '#f7b2cc', 'Contacted': '#b8d8f8', 'Visited': '#cdb8f5', 'Applied': '#f6d27a', 'Enrolled': '#9fdcc3', 'Follow-up': '#ffc9a8', 'Not interested': '#d6d3d8' };
 var TYPE_COLORS = { 'Call': '#b8d8f8', 'WhatsApp': '#3ccf7f', 'Email': '#cdb8f5', 'Visit': '#ffc9a8', 'Meeting': '#f7b2cc', 'Note': '#d6d3d8', 'Status change': '#e9e4ee' };
 /* Notes and automatic status changes are history, but not contact with the learner. */
 var IS_CONTACT = function (type) { return type !== 'Note' && type !== 'Status change'; };
 var OPEN = function (s) { return s !== 'Enrolled' && s !== 'Not interested'; };
+var PAY_METHODS = ['Cash at the Learnovate office', 'Bank transfer', 'Card payment (debit or credit)'];
+/* "QID front: https://..." lines saved with an online enrollment */
+function docLinks(q) {
+  return String(q || '').split(/\n+/).map(function (line) { var m = line.match(/^(.*?):\s*(https:\/\/\S+)$/); return m ? { label: m[1], url: m[2] } : null; }).filter(Boolean);
+}
 var D = { records: [], logs: [], quiz: [], lists: { statuses: [], sources: [], counsellors: [], contactTypes: [] } };
 var L = [];          // learners grouped from records
 var current = null;  // learner open in the drawer
@@ -423,9 +434,11 @@ function renderOverview() {
   var mine = R.filter(function (r) { return r.status === 'Enrolled' && r.counsellor === me; }).length;
   var repeat = L.filter(function (l) { return l.enrolled > 1; }).length;
   var due = dueRecords().filter(function (r) { return midnight(parseD(r.followUp)) <= t; }).length;
+  var applied = R.filter(function (r) { return r.status === 'Applied'; }).length;
   var k = [
     ['Learners', L.length, 'var(--rose-soft)', L.filter(function (l) { return l.returning; }).length + ' with 2+ courses', 'learners'],
     ['Course records', R.length, 'var(--lav-soft)', week + ' added this week', 'learners'],
+    ['Applications to review', applied, '#fff6dc', 'online enrollments waiting', 'Applied'],
     ['Enrolled', enrolled, 'var(--mint-soft)', (R.length ? Math.round(enrolled / R.length * 100) : 0) + '% conversion', 'Enrolled'],
     ['Enrolled under ' + me, mine, '#ddf4ea', 'as counsellor', 'mine'],
     ['Repeat enrollees', repeat, 'var(--lav-soft)', 'enrolled in 2+ courses', 'returning'],
@@ -439,7 +452,7 @@ function renderOverview() {
       var a = k[+el.dataset.i][4];
       if (a === 'followups') return show('followups');
       resetFilters();
-      if (a === 'Enrolled') document.getElementById('fStatus').value = 'Enrolled';
+      if (a === 'Enrolled' || a === 'Applied') document.getElementById('fStatus').value = a;
       if (a === 'mine') document.getElementById('fCounsellor').value = me;
       if (a === 'returning') document.getElementById('fReturning').checked = true;
       renderLearners(); show('learners');
@@ -581,6 +594,8 @@ function openLearner(id, keep) {
         l.records.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; }).map(function (r) {
           return '<form class="rec ' + esc(String(r.status).replace(/\s+/g, '-')) + '" data-r="' + esc(r.id) + '">' +
             '<div class="rec-top"><div><b>' + esc(r.course) + '</b><small>' + esc(r.id) + ' · added ' + fmtD(r.date) + (r.category ? ' · ' + esc(r.category) : '') + (r.fee ? ' · ' + esc(r.fee) : '') + ' · via ' + esc(r.via || '—') + '</small></div>' + stChip(r.status) + '</div>' +
+            (docLinks(r.qid).length || r.payMethod || r.pay ? '<div class="docs">' + docLinks(r.qid).map(function (d) { return '<a href="' + esc(d.url) + '" target="_blank" rel="noopener">🪪 ' + esc(d.label) + '</a>'; }).join('') +
+              (r.pay ? '<span class="pill">' + esc(r.pay) + '</span>' : '') + (r.payMethod ? '<span class="pill">' + esc(r.payMethod) + '</span>' : '') + '</div>' : '') +
             '<div class="form">' +
               '<div class="fld"><label>Status</label><select class="f" name="status">' + opts(S.statuses, r.status) + '</select></div>' +
               '<div class="fld"><label>Counsellor</label><select class="f" name="counsellor">' + opts(S.counsellors, r.counsellor, '—') + '</select></div>' +
@@ -592,6 +607,7 @@ function openLearner(id, keep) {
               '<div class="fld"><label>Lead source</label><select class="f" name="source">' + opts(S.sources, r.source, '—') + '</select></div>' +
               '<div class="fld"><label>Source details</label><input class="f" name="sourceDetail" value="' + esc(r.sourceDetail) + '"></div>' +
               '<div class="fld"><label>Payment option</label><select class="f" name="pay">' + opts(['One-time payment', 'Instalment', 'Not sure yet'], r.pay, 'Not decided') + '</select></div>' +
+              '<div class="fld"><label>Payment method</label><select class="f" name="payMethod">' + opts(PAY_METHODS.indexOf(r.payMethod) > -1 || !r.payMethod ? PAY_METHODS : PAY_METHODS.concat([r.payMethod]), r.payMethod, 'Not decided') + '</select></div>' +
               '<div class="fld"><label>Study mode</label><select class="f" name="mode">' + opts(['Online', 'In person', 'No preference'], r.mode, '—') + '</select></div>' +
               '<div class="fld"><label>Preferred start</label><input class="f" name="start" value="' + esc(r.start) + '"></div>' +
               '<div class="fld"><label>Best time to contact</label><input class="f" name="time" value="' + esc(r.time) + '"></div>' +
@@ -631,7 +647,7 @@ function openLearner(id, keep) {
   dr.querySelectorAll('form.rec').forEach(function (f) {
     f.onsubmit = function (e) {
       e.preventDefault(); var ch = {};
-      ['status', 'counsellor', 'followUp', 'enrolledDate', 'notes', 'source', 'sourceDetail', 'pay', 'mode', 'start', 'time'].forEach(function (k) { if (f[k]) ch[k] = f[k].value; });
+      ['status', 'counsellor', 'followUp', 'enrolledDate', 'notes', 'source', 'sourceDetail', 'pay', 'payMethod', 'mode', 'start', 'time'].forEach(function (k) { if (f[k]) ch[k] = f[k].value; });
       busy(true);
       api('updateRecord', f.dataset.r, ch).then(function () { toast('Course saved'); return load(true); }).catch(fail);
     };
@@ -656,6 +672,7 @@ function openAdd(l) {
   f.source.innerHTML = opts(S.sources, l ? l.source : '', 'Choose…');
   f.counsellor.innerHTML = opts(S.counsellors, S.counsellors[0]);
   f.status.innerHTML = opts(S.statuses, 'Inquired');
+  f.payMethod.innerHTML = opts(PAY_METHODS, '', 'Not decided');
   document.querySelectorAll('[data-newonly]').forEach(function (el) { el.hidden = !!l; });
   document.getElementById('addTitle').textContent = l ? 'Add a course for ' + l.name : 'Add learner';
   document.getElementById('addSubmit').textContent = l ? 'Add course' : 'Save learner';
@@ -706,7 +723,7 @@ af.onsubmit = function (e) {
     learnerId: addFor ? addFor.id : '', name: f.name.value, phone: f.phone.value, email: f.email.value,
     course: f.course.value.trim(), category: info ? info[0] : '', fee: info && info[2] ? 'QAR ' + Number(info[2]).toLocaleString('en-US') + ' one-time' + (info[3] ? ' / QAR ' + Number(info[3]).toLocaleString('en-US') + ' instalment' : '') : '',
     source: f.source.value, sourceDetail: f.sourceDetail.value, counsellor: f.counsellor.value, status: f.status.value,
-    pay: f.pay.value, mode: f.mode.value, followUp: f.followUp.value, start: f.start.value, notes: f.notes.value, consent: addFor ? true : f.consent.checked
+    pay: f.pay.value, payMethod: f.payMethod.value, mode: f.mode.value, followUp: f.followUp.value, start: f.start.value, notes: f.notes.value, consent: addFor ? true : f.consent.checked
   };
   document.getElementById('addSubmit').disabled = true; busy(true);
   api('addLearner', d).then(function (res) {

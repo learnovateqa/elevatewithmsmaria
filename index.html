@@ -378,6 +378,48 @@
   @media (max-width:900px){ .svc-grid{grid-template-columns:1fr;max-width:520px;margin:0 auto} }
   @media (max-width:900px){ .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-width:360px} }
 
+
+  /* ---------- Inquire / Enroll ---------- */
+  .btn-apply{background:linear-gradient(135deg,#bfe9d8,#cdb8f5);color:var(--plum);box-shadow:0 8px 18px rgba(79,176,140,.25)}
+  .btn-apply:hover{filter:brightness(1.03)}
+  .btn-big{min-height:54px;font-size:1rem;width:100%}
+  .enroll-right{display:grid;gap:16px;align-content:start}
+  .mode{display:grid;grid-template-columns:1fr 1fr;gap:8px;background:var(--bg);padding:6px;border-radius:18px;border:1px solid var(--line)}
+  .mode-btn{border:0;background:transparent;border-radius:14px;padding:10px 12px;font:inherit;font-weight:700;font-size:.95rem;color:var(--muted);cursor:pointer;text-align:center;transition:background .2s,color .2s,box-shadow .2s}
+  .mode-btn small{display:block;font-size:.72rem;font-weight:500;opacity:.85}
+  .mode-btn[aria-selected="true"]{background:#fff;color:var(--plum);box-shadow:0 4px 14px rgba(160,100,140,.15)}
+  .mode-btn[data-mode="apply"][aria-selected="true"]{background:linear-gradient(135deg,#e6f7f0,#f1eafd)}
+  fieldset.field{border:0;padding:0;margin:0;min-width:0}
+  fieldset.field legend{font-size:.84rem;font-weight:600;color:var(--plum);margin-bottom:6px;padding:0}
+  fieldset.field legend i{color:var(--rose-deep);font-style:normal}
+  .choices{display:grid;gap:8px}
+  .choices.two{grid-template-columns:1fr 1fr}
+  .choice{display:flex;gap:10px;align-items:flex-start;background:#fffafc;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;transition:border-color .2s,background .2s}
+  .field .choice input{width:18px;height:18px;min-height:0;padding:0;margin-top:2px;border:0;box-shadow:none;accent-color:var(--rose-deep);flex:0 0 18px}
+  .field .drop input{width:100%;height:100%;min-height:0;padding:0}
+  .choice b{display:block;font-size:.9rem;color:var(--plum);font-weight:600}
+  .choice small{display:block;font-size:.78rem;color:var(--muted)}
+  .choice:has(input:checked){border-color:var(--rose);background:#fff;box-shadow:0 0 0 3px rgba(247,178,204,.25)}
+  fieldset.invalid .choice,fieldset.invalid .drop{border-color:var(--rose-deep)}
+  .uploads{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .drop{position:relative;display:grid;place-items:center;text-align:center;min-height:120px;border:2px dashed var(--rose);border-radius:16px;background:#fffafc;cursor:pointer;overflow:hidden;padding:10px;transition:background .2s}
+  .drop:hover{background:var(--rose-soft)}
+  .drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .drop b{display:block;color:var(--plum);font-size:.88rem}
+  .drop small{display:block;color:var(--muted);font-size:.76rem}
+  .drop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .drop.has .drop-in{position:relative;z-index:1;background:rgba(255,255,255,.88);border-radius:10px;padding:4px 10px;margin-top:auto}
+  .drop:focus-within{outline:3px solid var(--lav-deep);outline-offset:2px}
+  .hint{font-size:.78rem;color:var(--muted);margin-top:6px}
+  .apply-done{text-align:center;background:linear-gradient(135deg,#e6f7f0,#fff 50%,var(--lav-soft));border:1px solid var(--line);border-radius:22px;padding:30px 22px;display:grid;gap:12px;justify-items:center}
+  .apply-done .done-icon{font-size:2.6rem;animation:bob 2.5s ease-in-out infinite}
+  .apply-done h4{font-size:1.3rem;color:var(--plum)}
+  .apply-done p{color:var(--ink);font-size:.93rem;max-width:420px}
+  .apply-done b{color:var(--rose-deep)}
+  .course .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .course .acts .btn-sm{font-size:.84rem}
+  .course .acts .go-apply{background:#fff;border:1.5px solid var(--accent);color:var(--plum)}
+
   /* ---------- Enroll ---------- */
   .btn-enroll{margin-top:22px;background:var(--grad);color:var(--plum);box-shadow:0 8px 20px rgba(229,127,165,.35);position:relative;overflow:hidden}
   .btn-enroll::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);transform:skewX(-20deg);animation:sheen 3.5s ease-in-out infinite}
@@ -416,7 +458,7 @@
   .consent input{width:20px;height:20px;flex-shrink:0;margin-top:1px;accent-color:var(--rose-deep)}
   .consent i{color:var(--rose-deep);font-style:normal}
   .consent.invalid{border-color:var(--rose-deep);background:#fff3f7}
-  .field[hidden]{display:none}
+  [hidden]{display:none!important}
   .hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
   .form-error{color:#c2436f;font-size:.86rem;font-weight:500;background:#fff0f5;border-radius:12px;padding:10px 14px}
   .send{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
@@ -494,13 +536,16 @@
     .opts{grid-template-columns:1fr}
     .results .cgrid{grid-template-columns:1fr}
     .row2,.send{grid-template-columns:1fr}
+    .choices.two,.uploads{grid-template-columns:1fr 1fr}
     .toggle{width:100%}
     .search{flex-basis:100%}
     .cgrid{grid-template-columns:1fr}
     .cgroup summary{padding:14px}
     .cgroup .cgrid{padding:4px 12px 14px}
     .gt b{font-size:.98rem}
-    .hero-cta .btn{flex:1}
+    .hero-cta{display:grid;grid-template-columns:1fr 1fr}
+    .hero-cta .btn{white-space:nowrap;padding:0 12px}
+    .hero-cta .btn-browse{grid-column:1/-1}
     .steps{grid-template-columns:1fr}
     footer .wrap{flex-direction:column;align-items:flex-start}
     .fab-label{display:none}
@@ -566,8 +611,9 @@
         <div class="stat"><b>24/7</b><small>Access</small></div>
       </div>
       <div class="hero-cta">
-      <a class="btn btn-browse" href="#catalog">📚 Browse <span class="js-total">130+</span> Courses</a>
-      <a class="btn btn-enroll" href="#enroll">✨ Enroll Now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+      <a class="btn btn-enroll" href="#enroll" data-mode="inquire">💬 Inquire Now</a>
+      <a class="btn btn-apply" href="#enroll" data-mode="apply">✅ Enroll Now</a>
+      <a class="btn btn-browse" href="#catalog"><span>📚 Browse <span class="js-total">130+</span> Courses</span></a>
       </div>
     </div>
 
@@ -791,9 +837,10 @@
     <!-- ============ ENROLLMENT FORM ============ -->
     <section class="enroll" id="enroll" aria-labelledby="enrollTitle">
       <div class="enroll-intro">
-        <span class="eyebrow">Enrollment</span>
-        <h3 id="enrollTitle">Enroll with Ms. Maria</h3>
-        <p>Fill in this short form and your details go straight to Ms. Maria on WhatsApp or email. She'll reply personally to guide you to the right course.</p>
+        <span class="eyebrow">Inquire or enroll</span>
+        <h3 id="enrollTitle">Start with Ms. Maria</h3>
+        <p><b>Not sure yet?</b> Send a quick inquiry. Ms. Maria will reply personally with fees, timings and advice, with no commitment.</p>
+        <p style="margin-top:8px"><b>Ready to start?</b> Enroll online: choose your course and payment option, and upload your QID. Ms. Maria will confirm your place and send the payment details.</p>
         <div class="more">
           <b>🌸 More courses available</b>
           <span>Don't see your course above? Ms. Maria offers other courses too. Choose <em>"Other course"</em> in the form and tell her what you're looking for.</span>
@@ -810,6 +857,11 @@
         </ul>
       </div>
 
+      <div class="enroll-right">
+      <div class="mode" role="tablist" aria-label="Inquire or enroll">
+        <button type="button" role="tab" class="mode-btn" data-mode="inquire" aria-selected="true">💬 Inquire<small>Quick question, no commitment</small></button>
+        <button type="button" role="tab" class="mode-btn" data-mode="apply" aria-selected="false">✅ Enroll<small>QID and payment option</small></button>
+      </div>
       <form class="enroll-form" id="enrollForm" novalidate>
         <div class="field">
           <label for="fName">Full name <i>*</i></label>
@@ -913,6 +965,95 @@
         </div>
         <p class="form-note">Tapping a button opens WhatsApp or your email app with your details filled in. Just press send.</p>
       </form>
+
+      <form class="enroll-form" id="applyForm" novalidate hidden>
+        <div class="field">
+          <label for="aName">Full name (as on your QID) <i>*</i></label>
+          <input id="aName" type="text" autocomplete="name" required placeholder="e.g. Aisha Rahman">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="aPhone">WhatsApp / phone <i>*</i></label>
+            <input id="aPhone" type="tel" autocomplete="tel" inputmode="tel" required placeholder="+974 …">
+          </div>
+          <div class="field">
+            <label for="aEmail">Email</label>
+            <input id="aEmail" type="email" autocomplete="email" placeholder="you@example.com">
+          </div>
+        </div>
+        <div class="field">
+          <label for="aCourse">Course or service <i>*</i></label>
+          <select id="aCourse" required><option value="">Choose a course or service…</option></select>
+        </div>
+        <fieldset class="field" id="aPayWrap">
+          <legend>Payment option <i>*</i></legend>
+          <div class="choices two">
+            <label class="choice"><input type="radio" name="pay" value="One-time payment"><span><b>One-time payment</b><small id="feeOne">Pay the full fee</small></span></label>
+            <label class="choice"><input type="radio" name="pay" value="Instalment"><span><b>Instalment</b><small id="feeInst">Pay in parts</small></span></label>
+          </div>
+        </fieldset>
+        <fieldset class="field" id="aMethodWrap">
+          <legend>Payment method <i>*</i></legend>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="payMethod" value="Cash at the Learnovate office"><span><b>💵 Cash at the Learnovate office</b><small>Pay in person at the school</small></span></label>
+            <label class="choice"><input type="radio" name="payMethod" value="Bank transfer"><span><b>🏦 Bank transfer</b><small>Ms. Maria sends the bank details</small></span></label>
+            <label class="choice"><input type="radio" name="payMethod" value="Card payment (debit or credit)"><span><b>💳 Card payment (debit or credit)</b><small>At the office or by payment link</small></span></label>
+          </div>
+        </fieldset>
+        <div class="row2">
+          <div class="field">
+            <label for="aMode">Study mode</label>
+            <select id="aMode"><option>No preference</option><option>Online</option><option>In person</option></select>
+          </div>
+          <div class="field">
+            <label for="aStart">Preferred start</label>
+            <select id="aStart"><option>As soon as possible</option><option>Within 1 month</option><option>In 2–3 months</option></select>
+          </div>
+        </div>
+        <fieldset class="field" id="aQidWrap">
+          <legend>Upload your QID <i>*</i></legend>
+          <div class="uploads">
+            <label class="drop" id="dropFront"><input type="file" id="aQidFront" accept="image/*,application/pdf"><span class="drop-in"><b>📷 QID front *</b><small>Take a photo or choose a file</small></span><img alt="" hidden></label>
+            <label class="drop" id="dropBack"><input type="file" id="aQidBack" accept="image/*,application/pdf"><span class="drop-in"><b>📷 QID back</b><small>Optional</small></span><img alt="" hidden></label>
+          </div>
+          <p class="hint">No QID yet? Upload the photo page of your passport instead. Your ID is saved privately and is only seen by Ms. Maria.</p>
+        </fieldset>
+        <div class="row2">
+          <div class="field">
+            <label for="aHeard">How did you hear about us? <i>*</i></label>
+            <select id="aHeard" required>
+              <option value="">Choose one…</option>
+              <option value="Social media">Social media (Instagram, Facebook, TikTok…)</option>
+              <option value="Referral">A friend, family member or colleague</option>
+              <option value="School-provided">Learnovate Qatar school</option>
+              <option value="Direct">I found it myself</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="aHeardDetail">Details (optional)</label>
+            <input id="aHeardDetail" type="text" maxlength="120" placeholder="Who referred you, which platform…">
+          </div>
+        </div>
+        <div class="field">
+          <label for="aMsg">Message (optional)</label>
+          <textarea id="aMsg" rows="2" placeholder="Anything Ms. Maria should know"></textarea>
+        </div>
+        <label class="consent" id="aConsentWrap"><input type="checkbox" id="aConsent"> <span>I agree that Ms. Maria and Learnovate Qatar may contact me about my enrollment. <i>*</i></span></label>
+        <label class="consent" id="aIdConsentWrap"><input type="checkbox" id="aIdConsent"> <span>I agree that a copy of my ID is stored securely by Learnovate Qatar for enrollment and certification only. <i>*</i></span></label>
+        <div class="hp" aria-hidden="true"><label>Leave this empty <input id="aWebsite" type="text" tabindex="-1" autocomplete="off"></label></div>
+        <p class="form-error" id="applyError" role="alert" hidden></p>
+        <button type="submit" class="btn btn-apply btn-big" id="applySubmit">✅ Submit enrollment</button>
+        <p class="form-note">Submitting doesn't charge you anything. Ms. Maria will confirm your place and send you the payment details.</p>
+      </form>
+
+      <div class="apply-done" id="applyDone" hidden>
+        <div class="done-icon" aria-hidden="true">🎉</div>
+        <h4>Enrollment submitted!</h4>
+        <p>Your reference number is <b id="applyRef">-</b>. Ms. Maria will review your details, confirm your place and send you the payment details.</p>
+        <a class="btn btn-wa" id="applyWa" href="#" target="_blank" rel="noopener">💬 Let Ms. Maria know on WhatsApp</a>
+        <button type="button" class="linkbtn" id="applyAgain">Enroll in another course</button>
+      </div>
+      </div>
     </section>
 
     <!-- ============ INSTALL TIP ============ -->
@@ -957,7 +1098,8 @@
       <a href="mailto:maria@me.learnovateqa.com?subject=Course%20Inquiry%20-%20Elevate%20with%20Ms.%20Maria">Email</a>
       <a href="#courses">Academies</a>
       <a href="#catalog">Courses</a>
-      <a href="#enroll">Enroll</a>
+      <a href="#enroll" data-mode="inquire">Inquire</a>
+      <a href="#enroll" data-mode="apply">Enroll</a>
       <a href="https://learnovateqa.com/" target="_blank" rel="noopener">🏫 Our School</a>
     </div>
   </div>
@@ -1273,7 +1415,10 @@
       '<div class="top"><div class="ci" aria-hidden="true">' + c.cat.icon + '</div><div><div class="cname">' + esc(c.cat.name) + '</div><h4>' + esc(c.name) + '</h4></div></div>' +
       '<div class="tags">' + tags.join('') + '</div>' +
       '<div class="price">' + price + '</div>' +
-      '<button class="btn btn-sm" type="button" data-enroll="' + esc(c.name) + '">' + btnLabel + ' →</button>' +
+      (c.flags.indexOf('s') > -1 || c.cat.id === 'career'
+        ? '<button class="btn btn-sm" type="button" data-enroll="' + esc(c.name) + '">' + btnLabel + ' →</button>'
+        : '<div class="acts"><button class="btn btn-sm" type="button" data-enroll="' + esc(c.name) + '">💬 Inquire</button>' +
+          '<button class="btn btn-sm go-apply" type="button" data-apply="' + esc(c.name) + '">✅ Enroll</button></div>') +
       '</article>';
   }
 
@@ -1322,7 +1467,17 @@
 
   // "Enroll" on a course -> pre-select it in the form and scroll there
   function onEnrollClick(e) {
+    var ap = e.target.closest('[data-apply]');
+    if (ap) {
+      if (!applyDone.hidden) applyDone.hidden = true;
+      setMode('apply');
+      aCourse.value = ap.dataset.apply; aCourse.dispatchEvent(new Event('change'));
+      document.getElementById('enroll').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(function () { document.getElementById('aName').focus({ preventScroll: true }); }, 600);
+      return;
+    }
     var b = e.target.closest('[data-enroll]'); if (!b) return;
+    setMode('inquire');
     var name = b.dataset.enroll;
     courseSel.value = name;
     courseSel.dispatchEvent(new Event('change'));
@@ -1523,6 +1678,170 @@
     } else {
       window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
     }
+  });
+
+
+  /* ---------- Inquire / Enroll switch ---------- */
+  var applyForm = document.getElementById('applyForm');
+  var applyDone = document.getElementById('applyDone');
+  function setMode(m) {
+    document.querySelectorAll('.mode-btn').forEach(function (b) { b.setAttribute('aria-selected', b.dataset.mode === m ? 'true' : 'false'); });
+    form.hidden = m !== 'inquire';
+    applyForm.hidden = m !== 'apply' || !applyDone.hidden;
+    if (m === 'inquire') applyDone.hidden = true;
+  }
+  document.querySelectorAll('[data-mode]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      if (el.dataset.mode === 'apply' && !applyDone.hidden) { applyDone.hidden = true; }
+      setMode(el.dataset.mode);
+    });
+  });
+
+  /* ---------- Online enrollment ---------- */
+  var aCourse = document.getElementById('aCourse');
+  CATALOG.forEach(function (cat) {
+    var g = document.createElement('optgroup'); g.label = cat.name;
+    cat.courses.forEach(function (r) {
+      if (r[7] === 's') return;                       // coming soon: inquire only
+      var o = document.createElement('option'); o.value = r[0]; o.textContent = r[0]; g.appendChild(o);
+    });
+    if (g.children.length) aCourse.appendChild(g);
+  });
+  function courseByName(n) { return ALL.filter(function (c) { return c.name === n; })[0]; }
+  aCourse.addEventListener('change', function () {
+    var c = courseByName(aCourse.value);
+    var one = c && c.one != null, inst = c && c.inst != null;
+    document.getElementById('feeOne').textContent = one ? qar(c.one) + ' in full' : 'Pay the full fee';
+    document.getElementById('feeInst').textContent = inst ? qar(c.inst) + ' in total, paid in parts' : (one ? 'Not available for this course' : 'Pay in parts');
+    var instInput = applyForm.querySelector('input[name="pay"][value="Instalment"]');
+    instInput.disabled = !!(one && !inst);
+    if (instInput.disabled && instInput.checked) instInput.checked = false;
+    aCourse.closest('.field').classList.remove('invalid');
+  });
+
+  var files = { front: null, back: null };
+  function readFile(file) {
+    return new Promise(function (res, rej) { var r = new FileReader(); r.onload = function () { res(r.result); }; r.onerror = rej; r.readAsDataURL(file); });
+  }
+  function shrinkImage(dataUrl) {
+    return new Promise(function (res) {
+      var img = new Image();
+      img.onload = function () {
+        var max = 1600, k = Math.min(1, max / Math.max(img.width, img.height));
+        var c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        res(c.toDataURL('image/jpeg', 0.82));
+      };
+      img.onerror = function () { res(null); };
+      img.src = dataUrl;
+    });
+  }
+  function prepareFile(file) {
+    var MB = 1024 * 1024;
+    if (file.size > 20 * MB) return Promise.reject(new Error('This file is too large. Please choose a smaller photo.'));
+    return readFile(file).then(function (url) {
+      if (file.type === 'application/pdf') {
+        if (file.size > 7 * MB) throw new Error('This PDF is too large. Please upload a photo instead.');
+        return { url: url, preview: null };
+      }
+      return shrinkImage(url).then(function (small) {
+        if (small) return { url: small, preview: small };
+        if (/^image\/(jpeg|png|webp|heic)/.test(file.type) && file.size <= 7 * MB) return { url: url, preview: null };
+        throw new Error('Please upload a photo (JPG or PNG) or a PDF of your QID.');
+      });
+    });
+  }
+  [['aQidFront', 'front', 'dropFront'], ['aQidBack', 'back', 'dropBack']].forEach(function (x) {
+    var input = document.getElementById(x[0]), drop = document.getElementById(x[2]);
+    var label = drop.querySelector('small'), defaultText = label.textContent, img = drop.querySelector('img');
+    input.addEventListener('change', function () {
+      var file = input.files && input.files[0];
+      files[x[1]] = null; img.hidden = true; drop.classList.remove('has'); label.textContent = defaultText;
+      if (!file) return;
+      label.textContent = 'Preparing…';
+      prepareFile(file).then(function (r) {
+        files[x[1]] = r.url;
+        drop.classList.add('has');
+        if (r.preview) { img.src = r.preview; img.hidden = false; }
+        label.textContent = '✓ ' + (file.name.length > 26 ? file.name.slice(0, 23) + '…' : file.name) + ' (tap to change)';
+        document.getElementById('aQidWrap').classList.remove('invalid');
+      }).catch(function (err) {
+        input.value = ''; label.textContent = defaultText;
+        applyErr.textContent = err.message; applyErr.hidden = false;
+      });
+    });
+  });
+
+  var applyErr = document.getElementById('applyError');
+  applyForm.addEventListener('change', function (e) {
+    var f = e.target.closest('.field, .consent'); if (f) f.classList.remove('invalid');
+    if (!applyForm.querySelector('.invalid')) applyErr.hidden = true;
+  });
+  applyForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = function (id) { return document.getElementById(id).value.trim(); };
+    var radio = function (n) { var r = applyForm.querySelector('input[name="' + n + '"]:checked'); return r ? r.value : ''; };
+    var missing = [];
+    function mark(el, label) { missing.push(label); el.classList.add('invalid'); }
+    if (!v('aName')) mark(document.getElementById('aName').closest('.field'), 'your full name');
+    if (!v('aPhone')) mark(document.getElementById('aPhone').closest('.field'), 'your phone number');
+    var em = v('aEmail');
+    if (em && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) mark(document.getElementById('aEmail').closest('.field'), 'a valid email');
+    if (!v('aCourse')) mark(aCourse.closest('.field'), 'a course');
+    if (!radio('pay')) mark(document.getElementById('aPayWrap'), 'a payment option');
+    if (!radio('payMethod')) mark(document.getElementById('aMethodWrap'), 'a payment method');
+    if (!files.front) mark(document.getElementById('aQidWrap'), 'a photo of your QID');
+    if (!v('aHeard')) mark(document.getElementById('aHeard').closest('.field'), 'how you heard about us');
+    if (!document.getElementById('aConsent').checked) mark(document.getElementById('aConsentWrap'), 'your consent to be contacted');
+    if (!document.getElementById('aIdConsent').checked) mark(document.getElementById('aIdConsentWrap'), 'your consent to store your ID');
+    if (missing.length) {
+      applyErr.textContent = 'Please add ' + missing.join(', ') + '.'; applyErr.hidden = false;
+      var first = applyForm.querySelector('.invalid input, .invalid select'); if (first) first.focus();
+      return;
+    }
+    applyErr.hidden = true;
+    var c = courseByName(v('aCourse'));
+    var details = {
+      type: 'enroll', website: v('aWebsite'), name: v('aName'), phone: v('aPhone'), email: em, course: v('aCourse'),
+      category: c ? c.cat.name : '', fee: feeText(v('aCourse')), pay: radio('pay'), payMethod: radio('payMethod'),
+      mode: v('aMode'), start: v('aStart'), source: v('aHeard'), sourceDetail: v('aHeardDetail'), message: v('aMsg'),
+      consent: true, idConsent: true
+    };
+    var summary = 'Name: ' + details.name + '\nPhone: ' + details.phone + '\nCourse: ' + details.course +
+      '\nPayment: ' + details.pay + ' by ' + details.payMethod;
+    function waLink(text) { return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(text); }
+
+    if (!INQUIRY_ENDPOINT) {
+      // Online saving isn't switched on yet: send the details by WhatsApp and attach the QID there.
+      window.open(waLink('NEW ENROLLMENT\n\n' + summary + '\nEmail: ' + (em || '-') + '\nStudy mode: ' + details.mode +
+        '\nPreferred start: ' + details.start + '\n\nI will send a photo of my QID in this chat.'), '_blank', 'noopener');
+      return;
+    }
+    details.qidFront = files.front; details.qidBack = files.back || '';
+    var btn = document.getElementById('applySubmit'); btn.disabled = true; btn.textContent = 'Submitting… please wait';
+    fetch(INQUIRY_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(details) })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res || !res.ok) throw new Error(res && res.error || 'Something went wrong.');
+        document.getElementById('applyRef').textContent = res.reference || res.recordId;
+        document.getElementById('applyWa').href = waLink('Hello Ms. Maria, I have submitted my enrollment for ' + details.course +
+          '. My reference number is ' + (res.reference || res.recordId) + '.\n\n' + summary);
+        applyForm.hidden = true; applyDone.hidden = false;
+        applyDone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      })
+      .catch(function (err) {
+        applyErr.innerHTML = '';
+        applyErr.appendChild(document.createTextNode((err && err.message && err.message !== 'Failed to fetch' ? err.message : 'We could not submit your enrollment. Please check your connection and try again.') + ' '));
+        var a = document.createElement('a'); a.href = waLink('Hello Ms. Maria, I tried to enroll online but it did not go through.\n\n' + summary);
+        a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Or send it on WhatsApp.'; applyErr.appendChild(a);
+        applyErr.hidden = false;
+      })
+      .then(function () { btn.disabled = false; btn.textContent = '✅ Submit enrollment'; });
+  });
+  document.getElementById('applyAgain').addEventListener('click', function () {
+    applyDone.hidden = true; applyForm.hidden = false;
+    aCourse.value = ''; aCourse.dispatchEvent(new Event('change'));
+    applyForm.querySelectorAll('input[type=radio]').forEach(function (r) { r.checked = false; });
   });
 
   /* ---------- Home-screen icon + web app manifest (generated inline) ---------- */

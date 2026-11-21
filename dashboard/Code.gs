@@ -7,16 +7,22 @@
  * Full step-by-step instructions are in SETUP.md.
  *
  * What it does
- *  - doPost: receives inquiries and quiz results from the student portal
- *    and saves them to the sheet (no login needed, so students can submit).
+ *  - doPost: receives inquiries, enrollment applications (with QID uploads)
+ *    and quiz results from the student portal and saves them to the sheet
+ *    (no login needed, so students can submit). QID files go to a private
+ *    folder in your Google Drive that only you can open.
  *  - doGet:  shows the private dashboard, but only to the owner of this sheet.
  *  - The dashboard functions (getDashboardData, addLearner, updateRecord,
  *    updateLearner, logContact) also check that the owner is signed in.
  */
 
 var SETTINGS = {
-  // Email you every time a new inquiry arrives from the portal.
-  NOTIFY_NEW_INQUIRIES: true
+  // Email you every time a new inquiry or enrollment arrives from the portal.
+  NOTIFY_NEW_INQUIRIES: true,
+  // Private Google Drive folder for uploaded QID copies (created automatically).
+  ID_FOLDER_NAME: 'Elevate Learners - ID documents (private)',
+  // Largest ID file accepted, in megabytes.
+  MAX_FILE_MB: 8
 };
 
 var TAB = {
@@ -30,7 +36,10 @@ var TAB = {
 var ENR_COLS = ['id', 'learnerId', 'date', 'name', 'phone', 'email', 'course', 'category', 'fee',
   'pay', 'mode', 'start', 'time', 'source', 'sourceDetail', 'counsellor', 'status', 'followUp',
   'enrolledDate', 'notes', 'message', 'via', 'updated', 'consent'];
-var ENR_READ = ENR_COLS.concat(['lastContact']);
+// Columns Z and AA, after the "Last contacted" formula column.
+var ENR_EXTRA = ['payMethod', 'qid'];
+var ENR_EXTRA_COL = 26;
+var ENR_READ = ENR_COLS.concat(['lastContact']).concat(ENR_EXTRA);
 var LOG_COLS = ['date', 'id', 'learnerId', 'name', 'recordId', 'course', 'type', 'note',
   'statusAfter', 'nextFollowUp', 'by'];
 var QUIZ_COLS = ['date', 'interest', 'goal', 'cert', 'budget', 'suggested'];
@@ -49,6 +58,8 @@ function doPost(e) {
     if (body.type === 'quiz') {
       saveQuiz_(body);
       out = { ok: true };
+    } else if (body.type === 'enroll') {
+      out = saveEnrollment_(body);
     } else {
       out = saveInquiry_(body);
     }
@@ -75,6 +86,57 @@ function saveInquiry_(b) {
   return result;
 }
 
+/** Online enrollment: course, payment option and method, and QID copies. */
+function saveEnrollment_(b) {
+  var name = clean_(b.name, 120), phone = clean_(b.phone, 40), course = clean_(b.course, 200);
+  var pay = clean_(b.pay, 40), method = clean_(b.payMethod, 80);
+  if (!name || !phone || !course) throw new Error('Name, phone and course are required.');
+  if (!pay || !method) throw new Error('Choose a payment option and a payment method.');
+  if (!b.consent || !b.idConsent) throw new Error('Please tick both consent boxes.');
+  if (!b.qidFront) throw new Error('Please upload a photo of your QID.');
+  var lists = lists_();
+  var source = lists.sources.indexOf(b.source) > -1 ? b.source : 'Direct';
+  var stamp = Utilities.formatDate(new Date(), ss_().getSpreadsheetTimeZone(), 'yyyy-MM-dd HHmm');
+  var links = [];
+  [['qidFront', 'QID front'], ['qidBack', 'QID back']].forEach(function (f) {
+    if (b[f[0]]) links.push(f[1] + ': ' + saveFile_(b[f[0]], clean_(name, 60) + ' - ' + f[1] + ' - ' + stamp));
+  });
+  var result = addRecord_({
+    name: name, phone: phone, email: clean_(b.email, 120), course: course,
+    category: clean_(b.category, 80), fee: clean_(b.fee, 80), pay: pay, payMethod: method,
+    mode: clean_(b.mode, 40), start: clean_(b.start, 60), source: source,
+    sourceDetail: clean_(b.sourceDetail, 120), message: clean_(b.message, 1500),
+    via: 'Portal (enrollment form)', consent: 'Yes', status: 'Applied', qid: links.join('\n')
+  }, { fromPortal: true, enrollment: true });
+  if (SETTINGS.NOTIFY_NEW_INQUIRIES) notify_(result, name, phone, course, source, 'Enrollment application');
+  result.reference = result.recordId;
+  return result;
+}
+
+/** Save an uploaded file (data URL) to the private ID folder and return its Drive link. */
+function saveFile_(dataUrl, baseName) {
+  var m = String(dataUrl || '').match(/^data:([\w\/+.-]+);base64,([A-Za-z0-9+\/=\s]+)$/);
+  if (!m) throw new Error('The ID file could not be read. Please try again.');
+  var type = m[1].toLowerCase();
+  var ext = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/heic': 'heic', 'application/pdf': 'pdf' }[type];
+  if (!ext) throw new Error('Please upload the QID as a photo or a PDF.');
+  var bytes = Utilities.base64Decode(m[2].replace(/\s/g, ''));
+  if (bytes.length > SETTINGS.MAX_FILE_MB * 1024 * 1024) throw new Error('The ID file is too large. Please upload a smaller photo.');
+  return idFolder_().createFile(Utilities.newBlob(bytes, type, baseName + '.' + ext)).getUrl();
+}
+
+function idFolder_() {
+  var props = PropertiesService.getScriptProperties();
+  var id = props.getProperty('ID_FOLDER_ID');
+  if (id) {
+    try { return DriveApp.getFolderById(id); } catch (err) { /* folder deleted: make a new one */ }
+  }
+  var folder = DriveApp.createFolder(SETTINGS.ID_FOLDER_NAME);
+  folder.setDescription('QID copies uploaded through the Elevate enrollment form. Private: do not share this folder.');
+  props.setProperty('ID_FOLDER_ID', folder.getId());
+  return folder;
+}
+
 function saveQuiz_(b) {
   var sh = sheet_(TAB.QUIZ);
   var row = nextRow_(sh);
@@ -82,11 +144,11 @@ function saveQuiz_(b) {
     clean_(b.goal, 80), clean_(b.cert, 80), clean_(b.budget, 80), clean_(b.suggested, 500)]]);
 }
 
-function notify_(result, name, phone, course, source) {
+function notify_(result, name, phone, course, source, kind) {
   try {
     var me = Session.getEffectiveUser().getEmail();
     if (!me) return;
-    var tag = result.duplicate ? 'Repeat inquiry' : (result.returning ? 'Returning learner' : 'New inquiry');
+    var tag = kind || (result.duplicate ? 'Repeat inquiry' : (result.returning ? 'Returning learner' : 'New inquiry'));
     MailApp.sendEmail({
       to: me,
       subject: tag + ': ' + name + ' – ' + course,
@@ -131,7 +193,7 @@ function addLearner(d) {
   assertOwner_();
   d = d || {};
   var rec = {};
-  ['learnerId', 'name', 'phone', 'email', 'course', 'category', 'fee', 'pay', 'mode', 'start', 'time',
+  ['learnerId', 'name', 'phone', 'email', 'course', 'category', 'fee', 'pay', 'payMethod', 'mode', 'start', 'time',
     'source', 'sourceDetail', 'counsellor', 'status', 'notes'].forEach(function (k) {
     rec[k] = clean_(d[k], k === 'notes' ? 1500 : 200);
   });
@@ -166,6 +228,9 @@ function updateRecord(recordId, changes) {
     }
     row[ENR_COLS.indexOf('updated')] = new Date();
     sh.getRange(rec._row, 1, 1, ENR_COLS.length).setValues([sanitizeRow_(row)]);
+    if (changes && 'payMethod' in changes) {
+      sh.getRange(rec._row, ENR_EXTRA_COL + ENR_EXTRA.indexOf('payMethod')).setValue(sanitize_(clean_(changes.payMethod, 80)));
+    }
     if (newStatus !== oldStatus) {
       appendLog_({
         learnerId: rec.learnerId, name: rec.name, recordId: rec.id, course: row[ENR_COLS.indexOf('course')],
@@ -250,6 +315,23 @@ function addRecord_(d, opts) {
       var open = records.filter(function (r) {
         return r.learnerId === learnerId && norm_(r.course) === norm_(d.course) && !CLOSED[r.status];
       })[0];
+      if (open && opts.enrollment) {
+        // Turn the open inquiry into an application instead of creating a second record.
+        var oldStatus = open.status;
+        sh.getRange(open._row, ENR_COLS.indexOf('status') + 1).setValue('Applied');
+        if (d.pay) sh.getRange(open._row, ENR_COLS.indexOf('pay') + 1).setValue(sanitize_(d.pay));
+        if (d.fee && !open.fee) sh.getRange(open._row, ENR_COLS.indexOf('fee') + 1).setValue(sanitize_(d.fee));
+        var prevQid = sh.getRange(open._row, ENR_EXTRA_COL + 1).getValue();
+        sh.getRange(open._row, ENR_EXTRA_COL, 1, 2).setValues([[sanitize_(d.payMethod || ''),
+          sanitize_([prevQid, d.qid].filter(String).join('\n'))]]);
+        sh.getRange(open._row, ENR_COLS.indexOf('updated') + 1).setValue(new Date());
+        appendLog_({
+          learnerId: learnerId, name: open.name, recordId: open.id, course: open.course, type: 'Status change',
+          note: 'Submitted the online enrollment form (status changed from ' + (oldStatus || 'blank') + ' to Applied).',
+          statusAfter: 'Applied'
+        });
+        return { ok: true, duplicate: true, returning: true, learnerId: learnerId, recordId: open.id };
+      }
       if (open) {
         appendLog_({
           learnerId: learnerId, name: open.name, recordId: open.id, course: open.course, type: 'Note',
@@ -277,6 +359,9 @@ function addRecord_(d, opts) {
     if (rec.status === 'Enrolled' && !rec.enrolledDate) rec.enrolledDate = today_();
     var row = nextRow_(sh);
     sh.getRange(row, 1, 1, ENR_COLS.length).setValues([sanitizeRow_(ENR_COLS.map(function (k) { return rec[k]; }))]);
+    if (d.payMethod || d.qid) {
+      sh.getRange(row, ENR_EXTRA_COL, 1, ENR_EXTRA.length).setValues([sanitizeRow_([d.payMethod || '', d.qid || ''])]);
+    }
     return { ok: true, returning: !!learner, learnerId: learnerId, recordId: rec.id };
   });
 }
@@ -437,6 +522,7 @@ function json_(o) {
 function setup() {
   [TAB.ENROLLMENTS, TAB.LOG, TAB.QUIZ, TAB.LISTS].forEach(sheet_);
   MailApp.getRemainingDailyQuota();
+  idFolder_();
   Logger.log('Setup OK. Sheet: %s. Owner: %s', ss_().getName(), Session.getEffectiveUser().getEmail());
 }
 
