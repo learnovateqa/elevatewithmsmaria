@@ -24,7 +24,7 @@ const front = () => `
     <div class="who">
       <h1>Ms. Maria</h1>
       <div class="line"></div>
-      <p>Course Counsellor &amp; Instructor<span>130+ courses · Healthcare · Teaching · Business · Languages</span><span class="career">CV · Recommendation letter · Mock interview</span></p>
+      <p>Course Counsellor &amp; Instructor<span>130+ courses · Healthcare · Teaching · Business · Languages</span><span class="career">CV · Recommendation letter<br>Mock interview · Prep-test</span></p>
     </div>
     <div class="photo"><img src="${PHOTO}" alt=""></div>
   </div>

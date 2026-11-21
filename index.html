@@ -267,7 +267,7 @@
   .svc-head{text-align:center;max-width:620px;margin:0 auto 24px;position:relative}
   .svc-head h3{font-size:1.6rem;color:var(--plum);font-weight:700;margin:10px 0 6px;line-height:1.2}
   .svc-head p{color:var(--muted);font-size:.95rem}
-  .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;position:relative}
+  .svc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;position:relative;max-width:900px;margin:0 auto}
   .svc{background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .3s,box-shadow .3s}
   .svc:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover)}
   .svc-icon{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;font-size:1.8rem;background:linear-gradient(135deg,#fff1c7,var(--rose-soft));transition:transform .4s cubic-bezier(.3,1.6,.5,1)}
@@ -558,7 +558,7 @@
     <div class="hero-row">
     <div class="hero">
       <h2>All your academies, <span>one portal.</span></h2>
-      <p>Choose your course below to continue learning — English, GED, Healthcare & BLS, Business, HR, Admin, Customer Care and Logistics, with Midwifery and Train the Trainer coming soon, plus CV writing, recommendation letters and mock interviews.</p>
+      <p>Choose your course below to continue learning — English, GED, Healthcare & BLS, Business, HR, Admin, Customer Care and Logistics, with Midwifery and Train the Trainer coming soon, plus CV writing, recommendation letters, mock interviews and prep-tests.</p>
       <div class="stats">
         <div class="stat"><b>9</b><small>Academies</small></div>
         <div class="stat"><b>+2</b><small>Coming Soon</small></div>
@@ -732,6 +732,16 @@
         <div class="svc-actions">
           <a class="btn btn-wa" href="https://wa.me/97470771337?text=Hello%20Ms.%20Maria%2C%20I%20would%20like%20to%20book%20a%20mock%20interview." target="_blank" rel="noopener">💬 Request on WhatsApp</a>
           <button class="btn btn-browse" type="button" data-enroll="Mock Interview Practice">📝 Request with form</button>
+        </div>
+      </article>
+      <article class="svc">
+        <div class="svc-icon" aria-hidden="true">✏️</div>
+        <h4>Prep-Test</h4>
+        <p>Practice tests and coaching so you walk into your exam or assessment knowing what to expect.</p>
+        <ul><li>Practice tests in the real test format</li><li>Review of your results and areas to improve</li><li>Tips to manage your time and nerves on the day</li></ul>
+        <div class="svc-actions">
+          <a class="btn btn-wa" href="https://wa.me/97470771337?text=Hello%20Ms.%20Maria%2C%20I%20would%20like%20to%20book%20a%20prep-test." target="_blank" rel="noopener">💬 Request on WhatsApp</a>
+          <button class="btn btn-browse" type="button" data-enroll="Prep-Test">📝 Request with form</button>
         </div>
       </article>
       </div>
@@ -1189,7 +1199,8 @@
     { id: 'career', name: 'Career Services', icon: '📝', courses: [
       ['CV Writing & Review', null, null, null, null, '', '', ''],
       ['Recommendation Letter', null, null, null, null, '', '', ''],
-      ['Mock Interview Practice', null, null, null, null, '', '', '']
+      ['Mock Interview Practice', null, null, null, null, '', '', ''],
+      ['Prep-Test', null, null, null, null, '', '', '']
     ]}
   ];
 
@@ -1338,7 +1349,7 @@
       ['safety', '🦺', 'Safety & technical', 'HSE, food safety, trades'],
       ['beauty', '💅', 'Beauty & fashion', 'Make-up, hair, nails, design'],
       ['lang', '🗣️', 'Languages & exams', 'English, Arabic, IELTS, GED'],
-      ['career', '📝', 'Career support', 'CV, recommendation letter, mock interview']
+      ['career', '📝', 'Career support', 'CV, letters, mock interview, prep-test']
     ]},
     { key: 'goal', q: 'What is your main goal?', opts: [
       ['new', '🚀', 'Start a new career', 'Get qualified for a new job'],
@@ -1405,7 +1416,7 @@
     var ranked = ALL.map(function (c) { return { c: c, s: score(c) }; })
       .filter(function (x) { return x.s > -999; })
       .sort(function (a, b) { return b.s - a.s || (a.c.one || 9e9) - (b.c.one || 9e9); })
-      .slice(0, 3).map(function (x) { return x.c; });
+      .slice(0, answers.area === 'career' ? 4 : 3).map(function (x) { return x.c; });
     var summary = [label('area'), label('goal'), 'Intl. certificate: ' + label('cert'), 'Budget: ' + label('budget')];
     var waText = encodeURIComponent('Hello Ms. Maria! I took the course finder quiz and would like your advice.\n\n' +
       'Interest: ' + summary[0] + '\nGoal: ' + summary[1] + '\n' + summary[2] + '\n' + summary[3] +
