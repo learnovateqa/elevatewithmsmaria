@@ -66,5 +66,7 @@ t('enrollment: rejects missing QID / consent / payment',()=>{ assert.strictEqual
 t('enrollment: rejects non-image files',()=>{ const r=post({type:'enroll',name:'X',phone:'+974 3111 2222',course:'Baking',pay:'Installment',payMethod:'Cash',consent:true,idConsent:true,qidFront:'data:text/html;base64,PGgxPg=='}); assert.strictEqual(r.ok,false); assert.match(r.error,/photo or a PDF/);});
 t('dashboard can edit payment method',()=>{ const id=E.find(x=>x[3]==='Grace Santos')[0]; ctx.updateRecord(id,{payMethod:'Cash'}); assert.strictEqual(E.find(x=>x[0]===id)[25],'Cash');});
 t('dashboard data includes payment method and ID links',()=>{ const d=ctx.getDashboardData(); const g=d.records.find(x=>x.name==='Grace Santos'); assert.strictEqual(g.payMethod,'Cash'); assert.match(g.qid,/QID front/);});
+t('enrollment with passport labels the file as passport',()=>{ const r=post({type:'enroll',idType:'Passport',name:'Maya Cruz',phone:'+974 3222 9090',course:'Baking',pay:'One-time payment',payMethod:'Cash',consent:true,idConsent:true,qidFront:IMG});
+  assert.strictEqual(r.ok,true,r.error); const row=E.find(x=>x[0]===r.recordId); assert.match(row[26],/^Passport photo page: https/); assert.match(M.state.files[M.state.files.length-1].name,/Maya Cruz - Passport photo page/);});
 console.log(ok+' passed');
 

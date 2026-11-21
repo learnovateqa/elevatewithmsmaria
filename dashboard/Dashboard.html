@@ -594,7 +594,7 @@ function openLearner(id, keep) {
         l.records.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; }).map(function (r) {
           return '<form class="rec ' + esc(String(r.status).replace(/\s+/g, '-')) + '" data-r="' + esc(r.id) + '">' +
             '<div class="rec-top"><div><b>' + esc(r.course) + '</b><small>' + esc(r.id) + ' · added ' + fmtD(r.date) + (r.category ? ' · ' + esc(r.category) : '') + (r.fee ? ' · ' + esc(r.fee) : '') + ' · via ' + esc(r.via || '—') + '</small></div>' + stChip(r.status) + '</div>' +
-            (docLinks(r.qid).length || r.payMethod || r.pay ? '<div class="docs">' + docLinks(r.qid).map(function (d) { return '<a href="' + esc(d.url) + '" target="_blank" rel="noopener">🪪 ' + esc(d.label) + '</a>'; }).join('') +
+            (docLinks(r.qid).length || r.payMethod || r.pay ? '<div class="docs">' + docLinks(r.qid).map(function (d) { return '<a href="' + esc(d.url) + '" target="_blank" rel="noopener">' + (/passport/i.test(d.label) ? '🛂 ' : '🪪 ') + esc(d.label) + '</a>'; }).join('') +
               (r.pay ? '<span class="pill">' + esc(r.pay) + '</span>' : '') + (r.payMethod ? '<span class="pill">' + esc(r.payMethod) + '</span>' : '') + '</div>' : '') +
             '<div class="form">' +
               '<div class="fld"><label>Status</label><select class="f" name="status">' + opts(S.statuses, r.status) + '</select></div>' +

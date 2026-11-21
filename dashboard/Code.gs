@@ -93,12 +93,14 @@ function saveEnrollment_(b) {
   if (!name || !phone || !course) throw new Error('Name, phone and course are required.');
   if (!pay || !method) throw new Error('Choose a payment option and a payment method.');
   if (!b.consent || !b.idConsent) throw new Error('Please tick both consent boxes.');
-  if (!b.qidFront) throw new Error('Please upload a photo of your QID.');
+  if (!b.qidFront) throw new Error('Please upload a photo of your QID or passport.');
   var lists = lists_();
   var source = lists.sources.indexOf(b.source) > -1 ? b.source : 'Direct';
   var stamp = Utilities.formatDate(new Date(), ss_().getSpreadsheetTimeZone(), 'yyyy-MM-dd HHmm');
   var links = [];
-  [['qidFront', 'QID front'], ['qidBack', 'QID back']].forEach(function (f) {
+  var idType = b.idType === 'Passport' ? 'Passport' : 'QID';
+  var labels = idType === 'Passport' ? ['Passport photo page', 'Passport other page'] : ['QID front', 'QID back'];
+  [['qidFront', labels[0]], ['qidBack', labels[1]]].forEach(function (f) {
     if (b[f[0]]) links.push(f[1] + ': ' + saveFile_(b[f[0]], clean_(name, 60) + ' - ' + f[1] + ' - ' + stamp));
   });
   var result = addRecord_({
@@ -119,7 +121,7 @@ function saveFile_(dataUrl, baseName) {
   if (!m) throw new Error('The ID file could not be read. Please try again.');
   var type = m[1].toLowerCase();
   var ext = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/heic': 'heic', 'application/pdf': 'pdf' }[type];
-  if (!ext) throw new Error('Please upload the QID as a photo or a PDF.');
+  if (!ext) throw new Error('Please upload your ID as a photo or a PDF.');
   var bytes = Utilities.base64Decode(m[2].replace(/\s/g, ''));
   if (bytes.length > SETTINGS.MAX_FILE_MB * 1024 * 1024) throw new Error('The ID file is too large. Please upload a smaller photo.');
   return idFolder_().createFile(Utilities.newBlob(bytes, type, baseName + '.' + ext)).getUrl();

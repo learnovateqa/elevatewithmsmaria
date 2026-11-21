@@ -7,7 +7,7 @@ It takes about 10 minutes, once. Use a computer, not a phone, for the setup.
 
 - Every inquiry, online enrollment and quiz result from the student portal is saved to the sheet.
 - Online enrollments arrive as **Applied**, with the payment option and method, and links to the
-  learner's QID photos. The photos are stored in a private Google Drive folder that only you can open
+  learner's ID photos (QID or passport). The photos are stored in a private Google Drive folder that only you can open
   ("Elevate Learners - ID documents (private)", created automatically).
 - A private dashboard that only your Google account can open, with:
   - learners, course records, enrollments, conversion rate and repeat enrollees
@@ -83,7 +83,7 @@ and the dashboard only opens for the account that owns the sheet.
   and everything in the Learner directory and Summary tabs).
 - **Payment methods:** the choices students see (cash at the office, bank transfer, card) are listed in
   `index.html` (the enrollment form) and `PAY_METHODS` in `Dashboard.html`. Ask Claude to change them.
-- **Reviewing an application:** open the learner, check the QID link, confirm payment, then set the status
+- **Reviewing an application:** open the learner, check the ID link, confirm payment, then set the status
   to **Enrolled** (the enrolled date fills in automatically).
 - **Privacy:** the sheet and the ID folder hold students' personal details and ID copies. Don't share it, and only add people
   you trust as editors.
