@@ -301,7 +301,7 @@
         <div class="fld"><label>Source details</label><input class="f" name="sourceDetail" placeholder="Referred by, platform, school contact…"></div>
         <div class="fld"><label>Counsellor</label><select class="f" name="counsellor"></select></div>
         <div class="fld"><label>Status</label><select class="f" name="status"></select></div>
-        <div class="fld"><label>Payment option</label><select class="f" name="pay"><option value="">Not decided</option><option>One-time payment</option><option>Instalment</option></select></div>
+        <div class="fld"><label>Payment option</label><select class="f" name="pay"><option value="">Not decided</option><option>One-time payment</option><option>Installment</option></select></div>
         <div class="fld"><label>Payment method</label><select class="f" name="payMethod"></select></div>
         <div class="fld"><label>Study mode</label><select class="f" name="mode"><option value="">No preference</option><option>Online</option><option>In person</option></select></div>
         <div class="fld"><label>Follow-up date</label><input class="f" name="followUp" type="date"></div>
@@ -606,7 +606,7 @@ function openLearner(id, keep) {
             '<details class="more"><summary>More details ▾</summary><div class="form">' +
               '<div class="fld"><label>Lead source</label><select class="f" name="source">' + opts(S.sources, r.source, '—') + '</select></div>' +
               '<div class="fld"><label>Source details</label><input class="f" name="sourceDetail" value="' + esc(r.sourceDetail) + '"></div>' +
-              '<div class="fld"><label>Payment option</label><select class="f" name="pay">' + opts(['One-time payment', 'Instalment', 'Not sure yet'], r.pay, 'Not decided') + '</select></div>' +
+              '<div class="fld"><label>Payment option</label><select class="f" name="pay">' + opts(['One-time payment', 'Installment', 'Not sure yet'], r.pay, 'Not decided') + '</select></div>' +
               '<div class="fld"><label>Payment method</label><select class="f" name="payMethod">' + opts(PAY_METHODS.indexOf(r.payMethod) > -1 || !r.payMethod ? PAY_METHODS : PAY_METHODS.concat([r.payMethod]), r.payMethod, 'Not decided') + '</select></div>' +
               '<div class="fld"><label>Study mode</label><select class="f" name="mode">' + opts(['Online', 'In person', 'No preference'], r.mode, '—') + '</select></div>' +
               '<div class="fld"><label>Preferred start</label><input class="f" name="start" value="' + esc(r.start) + '"></div>' +
@@ -721,7 +721,7 @@ af.onsubmit = function (e) {
   var info = courseInfo(f.course.value.trim());
   var d = {
     learnerId: addFor ? addFor.id : '', name: f.name.value, phone: f.phone.value, email: f.email.value,
-    course: f.course.value.trim(), category: info ? info[0] : '', fee: info && info[2] ? 'QAR ' + Number(info[2]).toLocaleString('en-US') + ' one-time' + (info[3] ? ' / QAR ' + Number(info[3]).toLocaleString('en-US') + ' instalment' : '') : '',
+    course: f.course.value.trim(), category: info ? info[0] : '', fee: info && info[2] ? 'QAR ' + Number(info[2]).toLocaleString('en-US') + ' one-time' + (info[3] ? ' / QAR ' + Number(info[3]).toLocaleString('en-US') + ' installment' : '') : '',
     source: f.source.value, sourceDetail: f.sourceDetail.value, counsellor: f.counsellor.value, status: f.status.value,
     pay: f.pay.value, payMethod: f.payMethod.value, mode: f.mode.value, followUp: f.followUp.value, start: f.start.value, notes: f.notes.value, consent: addFor ? true : f.consent.checked
   };

@@ -831,7 +831,7 @@
 
       <p class="cat-status" id="catStatus" aria-live="polite"></p>
       <div class="cgroups" id="catGrid"></div>
-      <p class="fee-note">Fees are in Qatari Riyal (QAR). <b>One-time</b> = pay in full, <b>Instalment</b> = total when paying in parts. Timing is per class. Fees may change, so please confirm with Ms. Maria when you enroll.</p>
+      <p class="fee-note">Fees are in Qatari Riyal (QAR). <b>One-time</b> = pay in full, <b>Installment</b> = total when paying in parts. Timing is per class. Fees may change, so please confirm with Ms. Maria when you enroll.</p>
     </section>
 
     <!-- ============ ENROLLMENT FORM ============ -->
@@ -906,7 +906,7 @@
             <label for="fPay">Payment option</label>
             <select id="fPay" name="pay">
               <option>One-time payment</option>
-              <option>Instalment</option>
+              <option>Installment</option>
               <option>Not sure yet</option>
             </select>
           </div>
@@ -989,7 +989,7 @@
           <legend>Payment option <i>*</i></legend>
           <div class="choices two">
             <label class="choice"><input type="radio" name="pay" value="One-time payment"><span><b>One-time payment</b><small id="feeOne">Pay the full fee</small></span></label>
-            <label class="choice"><input type="radio" name="pay" value="Instalment"><span><b>Instalment</b><small id="feeInst">Pay in parts</small></span></label>
+            <label class="choice"><input type="radio" name="pay" value="Installment"><span><b>Installment</b><small id="feeInst">Pay in parts</small></span></label>
           </div>
         </fieldset>
         <fieldset class="field" id="aMethodWrap">
@@ -1184,7 +1184,7 @@
 
   /* =====================================================================
      COURSE CATALOGUE DATA
-     Each row: [course name, one-time fee, instalment fee, local cert, international cert, timing, duration, flags]
+     Each row: [course name, one-time fee, installment fee, local cert, international cert, timing, duration, flags]
        - fees in QAR (null = ask for price / not offered)
        - certs: 1 = yes, 0 = no, null = not applicable
        - flags: 'p' = popular (highlighted), 'c' = combo package, 's' = coming soon
@@ -1406,7 +1406,7 @@
     var price;
     if (SHOW_PRICES && c.one != null) {
       price = '<div><b>' + qar(c.one) + '</b><small>one-time</small></div>' +
-        (c.inst != null ? '<div class="inst"><b>' + qar(c.inst) + '</b><small>instalment</small></div>' : '<div class="inst"><small>full payment only</small></div>');
+        (c.inst != null ? '<div class="inst"><b>' + qar(c.inst) + '</b><small>installment</small></div>' : '<div class="inst"><small>full payment only</small></div>');
     } else {
       price = '<div class="ask"><b>Ask for fees</b><small>Message Ms. Maria for details</small></div>';
     }
@@ -1614,7 +1614,7 @@
   function feeText(name) {
     for (var i = 0; i < ALL.length; i++) {
       var c = ALL[i];
-      if (c.name === name && c.one != null) return qar(c.one) + ' one-time' + (c.inst != null ? ' / ' + qar(c.inst) + ' instalment' : '');
+      if (c.name === name && c.one != null) return qar(c.one) + ' one-time' + (c.inst != null ? ' / ' + qar(c.inst) + ' installment' : '');
     }
     return '';
   }
@@ -1713,7 +1713,7 @@
     var one = c && c.one != null, inst = c && c.inst != null;
     document.getElementById('feeOne').textContent = one ? qar(c.one) + ' in full' : 'Pay the full fee';
     document.getElementById('feeInst').textContent = inst ? qar(c.inst) + ' in total, paid in parts' : (one ? 'Not available for this course' : 'Pay in parts');
-    var instInput = applyForm.querySelector('input[name="pay"][value="Instalment"]');
+    var instInput = applyForm.querySelector('input[name="pay"][value="Installment"]');
     instInput.disabled = !!(one && !inst);
     if (instInput.disabled && instInput.checked) instInput.checked = false;
     aCourse.closest('.field').classList.remove('invalid');
