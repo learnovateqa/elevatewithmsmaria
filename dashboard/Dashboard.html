@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<base target="_top">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elevate Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plum:#5a3d6e; --plum-2:#7a5a8f; --ink:#4a3a55; --muted:#8a7896; --line:#f0e1ea; --bg:#fff8fb; --card:#fff;
+    --rose:#f7b2cc; --rose-deep:#e57fa5; --rose-soft:#fde8f0; --lav:#cdb8f5; --lav-deep:#9b7fd9; --lav-soft:#f1eafd;
+    --mint:#b9e8d6; --mint-deep:#3f9c7a; --mint-soft:#e6f7f0; --sky:#b8d8f8; --sky-deep:#4a8bd0; --sky-soft:#eaf3fd;
+    --peach:#ffd4bd; --peach-deep:#e07a45; --peach-soft:#fff0e7; --grey-soft:#f1eff2; --red:#c2413a; --red-soft:#ffe3e1;
+    --wa:#3ccf7f; --grad:linear-gradient(135deg,var(--rose),var(--lav));
+    --shadow:0 2px 8px rgba(160,100,140,.07),0 10px 24px rgba(160,100,140,.09); --radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.5;
+    background-image:linear-gradient(rgba(229,127,165,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(229,127,165,.08) 1px,transparent 1px);background-size:32px 32px}
+  button,input,select,textarea{font:inherit;color:inherit}
+  a{color:inherit}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 18px}
+
+  /* top bar */
+  header{background:linear-gradient(120deg,#fde2ec,#efe4fd 55%,#e3f6ee);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+  .bar{display:flex;align-items:center;gap:12px;padding:12px 0;flex-wrap:wrap}
+  .logo{width:42px;height:42px;border-radius:14px;background:var(--grad);display:grid;place-items:center;flex-shrink:0}
+  .logo svg{width:24px;height:24px}
+  .brand b{display:block;color:var(--plum);font-size:1.05rem;line-height:1.15}
+  .brand small{color:var(--rose-deep);font-weight:500;font-size:.75rem}
+  .bar .sp{flex:1}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 16px;border-radius:999px;border:1.5px solid transparent;
+    background:#fff;color:var(--plum);font-weight:600;font-size:.86rem;cursor:pointer;text-decoration:none;white-space:nowrap;transition:transform .15s,box-shadow .15s,background .15s}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(160,100,140,.18)}
+  .btn:disabled{opacity:.6;cursor:wait;transform:none}
+  .btn-main{background:var(--grad);color:var(--plum)}
+  .btn-line{border-color:var(--line)}
+  .btn-wa{background:var(--wa);color:#fff}
+  .btn-sm{min-height:34px;padding:0 12px;font-size:.8rem}
+  .icon-btn{width:38px;height:38px;border-radius:12px;border:1.5px solid var(--line);background:#fff;display:inline-grid;place-items:center;cursor:pointer;text-decoration:none;flex-shrink:0}
+  .icon-btn svg{width:18px;height:18px}
+  .icon-btn.wa{background:var(--wa);border-color:var(--wa);color:#fff}
+
+  /* tabs */
+  .tabs{display:flex;gap:6px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex-shrink:0;border:0;background:rgba(255,255,255,.7);padding:8px 16px;border-radius:999px;font-weight:500;font-size:.86rem;color:var(--muted);cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--plum);color:#fff}
+  .tab .n{display:inline-block;margin-left:6px;background:var(--rose-soft);color:var(--rose-deep);border-radius:99px;padding:0 7px;font-size:.72rem;font-weight:600}
+  .tab[aria-selected="true"] .n{background:rgba(255,255,255,.25);color:#fff}
+
+  main{padding:20px 0 60px}
+  .view[hidden]{display:none}
+  h2{font-size:1.15rem;color:var(--plum);margin:26px 0 12px}
+  h2:first-child{margin-top:0}
+  .muted{color:var(--muted)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+
+  /* KPIs */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .kpi::after{content:"";position:absolute;right:-24px;top:-24px;width:70px;height:70px;border-radius:50%;background:var(--c,var(--rose-soft))}
+  .kpi b{display:block;font-size:1.7rem;color:var(--plum);line-height:1.1;position:relative;z-index:1}
+  .kpi span{font-size:.78rem;color:var(--muted);font-weight:500;position:relative;z-index:1}
+  .kpi small{display:block;font-size:.72rem;color:var(--rose-deep);font-weight:600;position:relative;z-index:1}
+  .kpi.click{cursor:pointer}
+  .kpi.click:hover{border-color:var(--rose)}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .card h3{font-size:.95rem;color:var(--plum);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+
+  /* bars */
+  .bars{display:grid;gap:9px}
+  .barrow{display:grid;grid-template-columns:110px 1fr 44px;gap:10px;align-items:center;font-size:.82rem;cursor:pointer}
+  .barrow .lbl{font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .track{height:12px;background:var(--grey-soft);border-radius:99px;overflow:hidden}
+  .fill{height:100%;border-radius:99px;background:var(--c,var(--rose));min-width:2px;transition:width .5s}
+  .barrow .val{text-align:right;font-weight:600;color:var(--plum)}
+  table.mini{width:100%;border-collapse:collapse;font-size:.82rem}
+  table.mini th{text-align:left;color:var(--muted);font-weight:500;padding:6px 4px;border-bottom:1px solid var(--line)}
+  table.mini td{padding:7px 4px;border-bottom:1px dashed var(--line)}
+  table.mini td.num,table.mini th.num{text-align:right}
+
+  /* status chips */
+  .st{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:600;padding:3px 9px;border-radius:99px;white-space:nowrap}
+  .st::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .s-Inquired{background:var(--rose-soft);color:#c2436f}
+  .s-Contacted{background:var(--sky-soft);color:#2f6faf}
+  .s-Visited{background:var(--lav-soft);color:#7a5ac0}
+  .s-Enrolled{background:#ddf4ea;color:#2f7d62}
+  .s-Follow-up{background:var(--peach-soft);color:#c0602f}
+  .s-Not-interested{background:var(--grey-soft);color:#777}
+  .pill{display:inline-block;font-size:.7rem;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--grey-soft);color:var(--ink);white-space:nowrap}
+  .pill.ret{background:var(--lav);color:var(--plum)}
+  .pill.src{background:var(--sky-soft);color:#2f6faf}
+  .pill.warn{background:var(--red-soft);color:var(--red)}
+
+  /* filters */
+  .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+  .search{flex:1 1 260px;display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:0 14px;min-height:42px}
+  .search input{border:0;outline:0;flex:1;min-width:0;font-size:16px;background:transparent}
+  .search svg{width:18px;height:18px;color:var(--rose-deep)}
+  select.f,input.f,textarea.f{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:8px 12px;min-height:42px;font-size:15px;max-width:100%}
+  select.f:focus,input.f:focus,textarea.f:focus,.search:focus-within{outline:none;border-color:var(--rose);box-shadow:0 0 0 3px rgba(247,178,204,.3)}
+  label.chk{display:inline-flex;align-items:center;gap:6px;font-size:.84rem;font-weight:500;color:var(--plum);background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:0 14px;min-height:42px;cursor:pointer}
+  .count{font-size:.82rem;color:var(--muted);margin:-4px 0 10px}
+
+  /* learner list */
+  .list{display:grid;gap:10px}
+  .lrow{display:grid;grid-template-columns:44px minmax(0,1.3fr) minmax(0,2fr) minmax(0,1fr) auto;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);
+    border-radius:16px;padding:12px 14px;box-shadow:var(--shadow);cursor:pointer;transition:border-color .15s,transform .15s}
+  .lrow:hover{border-color:var(--rose);transform:translateY(-1px)}
+  .av{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;font-weight:700;color:var(--plum);font-size:.9rem}
+  .lname b{display:block;color:var(--plum);font-size:.95rem;line-height:1.25}
+  .lname small{color:var(--muted);font-size:.76rem}
+  .lcourses{display:flex;flex-direction:column;gap:4px;min-width:0}
+  .lc{display:flex;gap:6px;align-items:center;font-size:.8rem;min-width:0}
+  .lc span.t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lmeta{font-size:.76rem;color:var(--muted);display:flex;flex-direction:column;gap:3px;align-items:flex-start}
+  .lact{display:flex;gap:6px}
+  .empty{text-align:center;padding:40px 20px;color:var(--muted);background:#fff;border:1.5px dashed var(--rose);border-radius:18px}
+  .empty b{display:block;color:var(--plum);font-size:1rem;margin-bottom:4px}
+
+  /* drawer */
+  .overlay{position:fixed;inset:0;background:rgba(90,61,110,.35);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+  .overlay.on{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:0;bottom:0;width:min(640px,100%);background:var(--bg);z-index:41;transform:translateX(100%);transition:transform .25s ease;display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(90,61,110,.2)}
+  .drawer.on{transform:none}
+  .dhead{background:linear-gradient(120deg,#fde2ec,#efe4fd);padding:16px 18px;display:flex;gap:12px;align-items:center}
+  .dhead .av{width:52px;height:52px;font-size:1.05rem}
+  .dhead h3{color:var(--plum);font-size:1.15rem;line-height:1.2}
+  .dbody{overflow-y:auto;padding:16px 18px 40px;flex:1}
+  .sec{margin-top:18px}
+  .sec > h4{font-size:.85rem;color:var(--plum);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+  .form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .form .full{grid-column:1/-1}
+  .fld{display:grid;gap:4px}
+  .fld label{font-size:.74rem;font-weight:600;color:var(--plum-2)}
+  .fld .f{width:100%}
+  textarea.f{min-height:70px;resize:vertical}
+  .rec{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;border-left:5px solid var(--rose)}
+  .rec.Enrolled{border-left-color:var(--mint)}
+  .rec.Visited{border-left-color:var(--lav)}
+  .rec.Contacted{border-left-color:var(--sky)}
+  .rec.Follow-up{border-left-color:var(--peach)}
+  .rec.Not-interested{border-left-color:#ccc}
+  .rec-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:10px}
+  .rec-top b{color:var(--plum);font-size:.95rem;line-height:1.3}
+  .rec-top small{display:block;color:var(--muted);font-size:.74rem}
+  details.more summary{cursor:pointer;font-size:.8rem;font-weight:600;color:var(--lav-deep);margin:8px 0;list-style:none}
+  details.more summary::-webkit-details-marker{display:none}
+  .row-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+
+  .timeline{position:relative;padding-left:22px}
+  .timeline::before{content:"";position:absolute;left:7px;top:4px;bottom:4px;width:2px;background:var(--line)}
+  .tl{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:10px}
+  .tl::before{content:"";position:absolute;left:-20px;top:14px;width:12px;height:12px;border-radius:50%;background:var(--c,var(--rose));border:2px solid #fff;box-shadow:0 0 0 2px var(--c,var(--rose))}
+  .tl .h{display:flex;justify-content:space-between;gap:8px;font-size:.76rem;color:var(--muted);flex-wrap:wrap}
+  .tl .h b{color:var(--plum);font-size:.8rem}
+  .tl p{font-size:.86rem;margin-top:4px;white-space:pre-wrap;word-break:break-word}
+
+  /* modal */
+  .modal{position:fixed;inset:0;z-index:50;display:none;align-items:flex-start;justify-content:center;padding:30px 14px;overflow-y:auto;background:rgba(90,61,110,.35)}
+  .modal.on{display:flex}
+  .mbox{background:var(--bg);border-radius:22px;width:min(640px,100%);box-shadow:0 20px 60px rgba(90,61,110,.3);overflow:hidden}
+  .mhead{background:linear-gradient(120deg,#fde2ec,#efe4fd);padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+  .mhead h3{color:var(--plum)}
+  .mbody{padding:18px 20px}
+  .note{font-size:.8rem;border-radius:12px;padding:10px 12px;background:var(--lav-soft);color:var(--plum);margin-bottom:12px}
+  .note.warn{background:var(--peach-soft);color:#9a4d22}
+
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(30px);background:var(--plum);color:#fff;padding:12px 18px;border-radius:14px;font-size:.88rem;font-weight:500;z-index:60;opacity:0;transition:all .25s;max-width:92vw}
+  .toast.on{opacity:1;transform:translateX(-50%)}
+  .toast.err{background:var(--red)}
+  .loading{position:fixed;inset:0;display:grid;place-items:center;background:rgba(255,248,251,.8);z-index:70}
+  .spin{width:44px;height:44px;border-radius:50%;border:4px solid var(--rose-soft);border-top-color:var(--rose-deep);animation:spin 0.8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .loading[hidden]{display:none}
+
+  @media (max-width:900px){
+    .grid2,.grid3{grid-template-columns:1fr}
+    .lrow{grid-template-columns:44px minmax(0,1fr) auto;row-gap:8px}
+    .lrow .lcourses{grid-column:2/-1}
+    .lrow .lmeta{grid-column:2/-1;flex-direction:row;flex-wrap:wrap;gap:6px}
+    .lrow .lact{grid-row:1;grid-column:3}
+  }
+  @media (max-width:560px){
+    .wrap{padding:0 12px}
+    .form{grid-template-columns:1fr}
+    .bar .btn-txt{display:none}
+    .kpi b{font-size:1.4rem}
+    .barrow{grid-template-columns:90px 1fr 36px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="bar">
+      <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 21 12h-5v9H8v-9H3z"/></svg></div>
+      <div class="brand"><b>Elevate Dashboard</b><small>Learnovate Qatar · Ms. Maria</small></div>
+      <span class="sp"></span>
+      <button class="btn btn-line" id="refreshBtn" title="Refresh">↻<span class="btn-txt"> Refresh</span></button>
+      <a class="btn btn-line" id="sheetLink" href="#" target="_blank" rel="noopener" title="Open the Google Sheet">📊<span class="btn-txt"> Sheet</span></a>
+      <button class="btn btn-main" id="addBtn">＋ Add learner</button>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" data-view="overview" aria-selected="true">Overview</button>
+      <button class="tab" role="tab" data-view="learners" aria-selected="false">Learners <span class="n" id="nLearners">0</span></button>
+      <button class="tab" role="tab" data-view="followups" aria-selected="false">Follow-ups <span class="n" id="nFollow">0</span></button>
+      <button class="tab" role="tab" data-view="quiz" aria-selected="false">Quiz insights</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- OVERVIEW -->
+  <section class="view" id="v-overview">
+    <h2>Overview</h2>
+    <div class="kpis" id="kpis"></div>
+    <div class="grid2" style="margin-top:16px">
+      <div class="card"><h3>Pipeline <small class="muted">tap a status to see learners</small></h3><div class="bars" id="pipeline"></div></div>
+      <div class="card"><h3>Lead sources</h3><table class="mini" id="sources"></table></div>
+    </div>
+    <div class="grid3" style="margin-top:16px">
+      <div class="card"><h3>Counsellors</h3><table class="mini" id="counsellors"></table></div>
+      <div class="card"><h3>Most requested courses</h3><div class="bars" id="topCourses"></div></div>
+      <div class="card"><h3>Latest inquiries</h3><div id="latest"></div></div>
+    </div>
+  </section>
+
+  <!-- LEARNERS -->
+  <section class="view" id="v-learners" hidden>
+    <h2>Learners</h2>
+    <div class="filters">
+      <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search name, phone, email, course, ID…"></label>
+      <select class="f" id="fStatus"><option value="">All statuses</option></select>
+      <select class="f" id="fSource"><option value="">All lead sources</option></select>
+      <select class="f" id="fCounsellor"><option value="">All counsellors</option></select>
+      <select class="f" id="fSort">
+        <option value="new">Newest first</option>
+        <option value="name">Name A–Z</option>
+        <option value="stale">Longest since contact</option>
+      </select>
+      <label class="chk"><input type="checkbox" id="fReturning"> Returning only</label>
+    </div>
+    <p class="count" id="lcount"></p>
+    <div class="list" id="learnerList"></div>
+  </section>
+
+  <!-- FOLLOW-UPS -->
+  <section class="view" id="v-followups" hidden>
+    <h2>Follow-ups due</h2>
+    <p class="muted" style="margin:-6px 0 12px;font-size:.85rem">Open courses with a follow-up date in the next 7 days or earlier.</p>
+    <div class="list" id="dueList"></div>
+    <h2>Not contacted in 14 days or more</h2>
+    <p class="muted" style="margin:-6px 0 12px;font-size:.85rem">Learners with an open course (not enrolled or closed) and no contact logged in the last 14 days.</p>
+    <div class="list" id="staleList"></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="view" id="v-quiz" hidden>
+    <h2>Course finder quiz</h2>
+    <div class="grid2">
+      <div class="card"><h3>Interests</h3><div class="bars" id="qInterest"></div></div>
+      <div class="card"><h3>Goals</h3><div class="bars" id="qGoal"></div></div>
+    </div>
+    <div class="grid2" style="margin-top:16px">
+      <div class="card"><h3>International certificate</h3><div class="bars" id="qCert"></div></div>
+      <div class="card"><h3>Budget</h3><div class="bars" id="qBudget"></div></div>
+    </div>
+    <h2>Latest quiz results</h2>
+    <div class="card" style="overflow-x:auto"><table class="mini" id="qTable"></table></div>
+  </section>
+</main>
+
+<!-- Learner drawer -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="Learner profile"></aside>
+
+<!-- Add learner modal -->
+<div class="modal" id="addModal" role="dialog" aria-modal="true" aria-labelledby="addTitle">
+  <div class="mbox">
+    <div class="mhead"><h3 id="addTitle">Add learner</h3><button class="icon-btn" data-close="addModal" aria-label="Close">✕</button></div>
+    <form class="mbody" id="addForm" autocomplete="off">
+      <div id="addNote"></div>
+      <div class="form">
+        <div class="fld full" data-newonly><label>Full name *</label><input class="f" name="name"></div>
+        <div class="fld" data-newonly><label>Phone / WhatsApp *</label><input class="f" name="phone" inputmode="tel" placeholder="+974 …"></div>
+        <div class="fld" data-newonly><label>Email</label><input class="f" name="email" type="email"></div>
+        <div class="fld full"><label>Course *</label><input class="f" name="course" list="courseList" placeholder="Start typing a course…"></div>
+        <div class="fld"><label>Lead source *</label><select class="f" name="source"></select></div>
+        <div class="fld"><label>Source details</label><input class="f" name="sourceDetail" placeholder="Referred by, platform, school contact…"></div>
+        <div class="fld"><label>Counsellor</label><select class="f" name="counsellor"></select></div>
+        <div class="fld"><label>Status</label><select class="f" name="status"></select></div>
+        <div class="fld"><label>Payment option</label><select class="f" name="pay"><option value="">Not decided</option><option>One-time payment</option><option>Instalment</option></select></div>
+        <div class="fld"><label>Study mode</label><select class="f" name="mode"><option value="">No preference</option><option>Online</option><option>In person</option></select></div>
+        <div class="fld"><label>Follow-up date</label><input class="f" name="followUp" type="date"></div>
+        <div class="fld"><label>Preferred start</label><input class="f" name="start" placeholder="e.g. January"></div>
+        <div class="fld full"><label>Notes</label><textarea class="f" name="notes"></textarea></div>
+        <label class="chk full" data-newonly style="border-radius:12px"><input type="checkbox" name="consent" checked> Learner agreed to be contacted about courses</label>
+      </div>
+      <div class="row-actions"><button type="button" class="btn btn-line" data-close="addModal">Cancel</button><button class="btn btn-main" type="submit" id="addSubmit">Save learner</button></div>
+    </form>
+  </div>
+</div>
+<datalist id="courseList"></datalist>
+
+<div class="toast" id="toast" role="status"></div>
+<div class="loading" id="loading"><div class="spin"></div></div>
+
+<script>
+/* Course catalogue (from the student portal) for the course picker */
+var CATALOG = [["Health & Social Care","Certified Nursing Assistant – Level 4",2000,2300],["Health & Social Care","Certified Nursing Assistant – Level 5",2500,2800],["Health & Social Care","Certified Nursing Assistant – Level 6",3000,3500],["Health & Social Care","Certified Nursing Assistant – Level 7",4000,4500],["Health & Social Care","Nursing Assistant – Level 4 & 5 Combo",3000,3500],["Health & Social Care","Nursing Assistant – Level 6 & 7 Combo",4000,4500],["Health & Social Care","Pharmacy Assistant – Level 4",2500,2800],["Health & Social Care","Medical Coding",3500,4000],["Health & Social Care","Certified Physiotherapy Assistant – Level 4",3300,3600],["Health & Social Care","Medical Receptionist",3500,3800],["Health & Social Care","Caregiver – Level 4",1500,1800],["Health & Social Care","Dental Assistant – Level 4",2200,2500],["Health & Social Care","Professional Massage Therapist – Level 4",1700,2000],["Health & Social Care","Professional Massage Therapist – Level 4 & 5 Combo",2200,2500],["Health & Social Care","Professional Massage Therapist – Level 6 & 7 Combo",3500,3800],["Health & Social Care","Midwifery",2000,2300],["Health & Social Care","CSSD Technician",3500,4000],["Health & Social Care","Nanny",2000,2500],["Health & Social Care","Biomedical Equipment Assistant – Level 4",3500,3800],["Health & Social Care","Microbiology – Level 4",3200,3500],["Health & Social Care","Ambulance Care Assistant – Level 4",2200,2500],["Health & Social Care","ECG Interpretation & Cardiac Rhythm Analysis",3000,3500],["Health & Social Care","Phlebotomy",2000,2500],["Health & Social Care","Basic Life Support (BLS)",null,null],["Teaching & Education","Advanced Phonics & Sound-Based Teaching",1700,2000],["Teaching & Education","Special Needs Education – Level 4",1700,2000],["Teaching & Education","Child Psychology – Level 4",1700,2000],["Teaching & Education","Pre & Primary Teachers Training – Level 4",1700,2000],["Teaching & Education","Certified Teachers Assistant – Level 4",1700,2000],["Teaching & Education","Early Childhood Education – Level 4",1700,2000],["Teaching & Education","Montessori Teachers Training – Level 4",1700,2000],["Teaching & Education","Pre & Primary Teachers Training – Level 5 & 6",2500,2800],["Teaching & Education","Graduate Diploma in Teaching & Learning – Level 6",3500,3800],["Teaching & Education","PGC Counselling Psychology – Level 7",3500,3800],["Teaching & Education","PGC Pre & Primary Teacher Training – Level 7",3500,3800],["Teaching & Education","PGC in Special Needs Education – Level 7",3500,3800],["Teaching & Education","PGC in Early Years Education – Level 7",3500,3800],["Teaching & Education","PGC Clinical Psychology – Level 7",3500,3800],["Teaching & Education","Train the Trainer",null,null],["Management","Business Management – Level 4",1500,1800],["Management","PGC Business Management – Level 7",3500,3800],["Management","Human Resources Management – Level 4",1500,1800],["Management","Human Resources & Management – Level 5 & 6",2500,3000],["Management","Senior Professional in Human Resources",2500,3000],["Management","Admin & Secretarial – Level 4",1500,1800],["Management","Customer Care Management – Level 4 & 5",null,null],["Management","Hospitality & Tourism Management – Level 4",1500,1800],["Management","Hospitality & Tourism Management – Level 5",2500,2800],["Management","Housekeeping Management – Level 4",1500,1800],["Management","Supply Chain Management – Level 4",1500,1800],["Management","Logistics & Supply Chain Management – Level 5",2500,3000],["Management","PGC in Logistics & Supply Chain Management – Level 7",3500,3800],["Management","Inventory & Warehouse Management – Level 4",1500,1800],["Management","Learning Management System (LMS)",2000,2500],["Management","Sales & Marketing – Level 4",1500,1800],["Management","Accounting & Finance Management – Level 4",1500,1800],["Management","Document Control Management – Level 4",1500,1800],["Management","Data Management & Office System",1500,1800],["Management","Data Entry & Data Management",2500,3000],["Management","Salon Management & Operations – Level 4",2000,2300],["Management","Risk Management – Level 4",1500,1800],["Management","Cashier Operations & Point of Sale Management",1500,1800],["Management","Taxation, Revenue & Income Management – Level 4",3000,3500],["Management","Cruise Ship Management – Level 4",2500,3000],["Management","Paralegal Studies & Legal Administration",2500,3000],["Professional & Tech","Graphic Designing",2000,2500],["Professional & Tech","Web Designing",3000,3500],["Professional & Tech","Basic Computer",1000,1300],["Professional & Tech","Microsoft Office Training",1000,1500],["Professional & Tech","Information Technology",2000,2500],["Professional & Tech","Cyber Security & Ethical Hacking",1500,1800],["Professional & Tech","Digital Marketing",1500,1800],["Professional & Tech","Artificial Intelligence Tools for Productivity & Business",1000,1300],["Professional & Tech","Claude AI & AI Productivity – Level 4",2000,2500],["Professional & Tech","Python Programming for Kids",1700,2000],["Professional & Tech","AutoCAD",2500,3000],["Professional & Tech","Interior Designing",3500,4000],["Professional & Tech","Video Editing",2500,3000],["Professional & Tech","Film Making & Digital Cinematography – Level 4",3000,3300],["Professional & Tech","Professional Photography",2000,2500],["Professional & Tech","Airport Ground Staff Operations – Level 4",2500,3000],["Professional & Tech","Aviation, Travel & Tourism Management",1500,2000],["Professional & Tech","Travel & Tourism – Level 4",1500,2000],["Professional & Tech","Public Relations Officer (PRO)",1500,2000],["Professional & Tech","Butler",1500,2000],["Professional & Tech","Certified Barista Training",900,1300],["Professional & Tech","Culinary",2500,3000],["Professional & Tech","Baking",1500,2000],["Professional & Tech","Mixology & Bartending",1500,2000],["Professional & Tech","Face Painting",2000,2500],["Professional & Tech","Henna",900,1300],["Professional & Tech","Carpet & Upholstery Cleaning",1000,1300],["Professional & Tech","Car Detailing & Automotive Surface Care – Level 4",3000,3500],["Professional & Tech","Plumbing Technician",1500,2000],["Professional & Tech","Electrical Systems Testing & Commissioning – Level 4",3500,4000],["Professional & Tech","Professional Certificate in Maintenance & Field Service Engineering – Level 4",2500,3000],["Professional & Tech","Hygiene & Safety Training – Level 4",1700,2000],["Health & Safety","Safety Officer",1300,1500],["Health & Safety","IOSH",800,null],["Health & Safety","OSHA",800,null],["Health & Safety","Health & Safety – Level 7",5000,5300],["Health & Safety","Food Safety – Level 3",1000,1500],["Health & Safety","Food Safety – Level 4",1500,2000],["Health & Safety","Food Safety – Level 5",2500,3000],["Health & Safety","Food Safety – Level 6",3000,3500],["Health & Safety","Food Safety – Level 7",3500,4000],["Health & Safety","Water & Wastewater Treatment Technology",2000,2500],["Health & Safety","Environmental Officer",1300,1500],["Health & Safety","Security Management – Level 4",2000,2500],["Health & Safety","HVAC Technician – Level 4",1500,1800],["Health & Safety","Powerboat Handling & Marine Safety",4000,4500],["Beauty & Fashion","Facial Course",2200,2500],["Beauty & Fashion","Hair Styling",1500,2000],["Beauty & Fashion","Nail Technician",1500,2000],["Beauty & Fashion","Make-up",1500,2000],["Beauty & Fashion","Eyelash Technician",1500,2000],["Beauty & Fashion","Professional Waxing & Hair Removal",2000,2300],["Beauty & Fashion","Barber",1500,2000],["Beauty & Fashion","Fashion Designer",2500,3000],["Language & Test Prep","Basic English for Beginners",1000,1500],["Language & Test Prep","Business English",1500,2000],["Language & Test Prep","Spoken Arabic",1000,1500],["Language & Test Prep","TEFL",1500,1800],["Language & Test Prep","IELTS Preparation",1000,1500],["Language & Test Prep","PTE Preparation",1000,1500],["Language & Test Prep","OET",1500,2000],["Language & Test Prep","Duolingo English Test Preparation",1500,1800],["Language & Test Prep","CELPIP",1500,1800],["Language & Test Prep","SAT Preparation",2500,3000],["Language & Test Prep","GED",4000,4500],["Language & Test Prep","PMP",1500,2000],["Language & Test Prep","ITIL",2000,2500]];
+
+var STATUS_COLORS = { 'Inquired': '#f7b2cc', 'Contacted': '#b8d8f8', 'Visited': '#cdb8f5', 'Enrolled': '#9fdcc3', 'Follow-up': '#ffc9a8', 'Not interested': '#d6d3d8' };
+var TYPE_COLORS = { 'Call': '#b8d8f8', 'WhatsApp': '#3ccf7f', 'Email': '#cdb8f5', 'Visit': '#ffc9a8', 'Meeting': '#f7b2cc', 'Note': '#d6d3d8', 'Status change': '#e9e4ee' };
+/* Notes and automatic status changes are history, but not contact with the learner. */
+var IS_CONTACT = function (type) { return type !== 'Note' && type !== 'Status change'; };
+var OPEN = function (s) { return s !== 'Enrolled' && s !== 'Not interested'; };
+var D = { records: [], logs: [], quiz: [], lists: { statuses: [], sources: [], counsellors: [], contactTypes: [] } };
+var L = [];          // learners grouped from records
+var current = null;  // learner open in the drawer
+
+/* ---------- server calls ---------- */
+function api(fn) {
+  var args = Array.prototype.slice.call(arguments, 1);
+  return new Promise(function (resolve, reject) {
+    var r = google.script.run.withSuccessHandler(resolve).withFailureHandler(function (e) { reject(e); });
+    r[fn].apply(r, args);
+  });
+}
+function busy(on) { document.getElementById('loading').hidden = !on; }
+function toast(msg, err) {
+  var t = document.getElementById('toast'); t.textContent = msg; t.className = 'toast on' + (err ? ' err' : '');
+  clearTimeout(toast.t); toast.t = setTimeout(function () { t.className = 'toast'; }, 3200);
+}
+function fail(e) { busy(false); toast((e && e.message) || String(e), true); }
+
+function load(keepDrawer) {
+  busy(true);
+  return api('getDashboardData').then(function (data) {
+    D = data; build(); renderAll();
+    document.getElementById('sheetLink').href = D.sheetUrl;
+    if (keepDrawer && current) openLearner(current, true);
+    busy(false);
+  }).catch(fail);
+}
+
+/* ---------- helpers ---------- */
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function stCls(s) { return 's-' + String(s || '').replace(/\s+/g, '-'); }
+function stChip(s) { return s ? '<span class="st ' + stCls(s) + '">' + esc(s) + '</span>' : ''; }
+function initials(n) { return String(n || '?').trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join('').toUpperCase(); }
+function parseD(s) { if (!s) return null; var d = new Date(String(s).length <= 10 ? s + 'T12:00:00' : s); return isNaN(d) ? null : d; }
+function midnight(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+function today() { return midnight(parseD(D.today) || new Date()); }
+function days(a, b) { return Math.round((b - a) / 86400000); }
+function fmtD(s) { var d = parseD(s); return d ? d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : ''; }
+function fmtDT(s) { var d = parseD(s); return d ? d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : ''; }
+function ago(s) {
+  var d = parseD(s); if (!d) return 'Never contacted';
+  var n = days(midnight(d), today());
+  return n <= 0 ? 'Contacted today' : n === 1 ? 'Contacted yesterday' : 'Contacted ' + n + ' days ago';
+}
+function waLink(p) { var d = String(p || '').replace(/\D/g, ''); if (d.length === 8) d = '974' + d; return 'https://wa.me/' + d; }
+function opts(list, sel, blank) { return (blank != null ? '<option value="">' + esc(blank) + '</option>' : '') + list.map(function (v) { return '<option' + (v === sel ? ' selected' : '') + '>' + esc(v) + '</option>'; }).join(''); }
+function countBy(arr, fn) { var m = {}; arr.forEach(function (x) { var k = fn(x); if (k) m[k] = (m[k] || 0) + 1; }); return m; }
+function bars(el, map, order, colorFn, onClick) {
+  var keys = order || Object.keys(map).sort(function (a, b) { return map[b] - map[a]; });
+  var max = Math.max.apply(null, keys.map(function (k) { return map[k] || 0; }).concat([1]));
+  el.innerHTML = keys.length ? keys.map(function (k) {
+    return '<div class="barrow" data-k="' + esc(k) + '"><span class="lbl" title="' + esc(k) + '">' + esc(k) + '</span><div class="track"><div class="fill" style="width:' + ((map[k] || 0) / max * 100) + '%;--c:' + (colorFn ? colorFn(k) : 'var(--rose)') + '"></div></div><span class="val">' + (map[k] || 0) + '</span></div>';
+  }).join('') : '<p class="muted">No data yet.</p>';
+  if (onClick) el.querySelectorAll('.barrow').forEach(function (r) { r.onclick = function () { onClick(r.dataset.k); }; });
+}
+var ICON = {
+  wa: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04.56C5.77.56.66 5.66.66 11.94c0 2 .52 3.96 1.52 5.69L.56 23.5l6.03-1.58a11.4 11.4 0 0 0 5.45 1.39c6.27 0 11.38-5.1 11.38-11.38S18.31.56 12.04.56zm5.43 13.82c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49 2.48 1.07 2.98.86 3.52.8.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/></svg>',
+  call: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>',
+  mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>'
+};
+
+/* ---------- data shaping ---------- */
+function build() {
+  var logsBy = {};
+  D.logs.forEach(function (g) { (logsBy[g.learnerId] = logsBy[g.learnerId] || []).push(g); });
+  var map = {};
+  D.records.forEach(function (r) {
+    var l = map[r.learnerId];
+    if (!l) l = map[r.learnerId] = { id: r.learnerId, name: r.name, phone: r.phone, email: r.email, source: r.source, records: [], first: r.date, latest: r.date };
+    l.records.push(r);
+    if (r.date < l.first) l.first = r.date;
+    if (r.date > l.latest) l.latest = r.date;
+  });
+  L = Object.keys(map).map(function (k) {
+    var l = map[k];
+    l.logs = (logsBy[k] || []).sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+    var contacts = l.logs.filter(function (g) { return IS_CONTACT(g.type); });
+    l.lastContact = contacts.length ? contacts[0].date : '';
+    l.returning = l.records.length > 1;
+    l.enrolled = l.records.filter(function (r) { return r.status === 'Enrolled'; }).length;
+    l.open = l.records.some(function (r) { return OPEN(r.status); });
+    l.hay = [l.id, l.name, l.phone, l.email, l.records.map(function (r) { return r.course + ' ' + r.id + ' ' + r.sourceDetail; }).join(' ')].join(' ').toLowerCase();
+    return l;
+  });
+}
+function findL(id) { return L.filter(function (l) { return l.id === id; })[0]; }
+
+/* ---------- rendering ---------- */
+function renderAll() {
+  fillFilters(); renderOverview(); renderLearners(); renderFollowups(); renderQuiz();
+  document.getElementById('nLearners').textContent = L.length;
+}
+
+function renderOverview() {
+  var R = D.records, t = today();
+  var week = R.filter(function (r) { var d = parseD(r.date); return d && days(midnight(d), t) <= 7; }).length;
+  var enrolled = R.filter(function (r) { return r.status === 'Enrolled'; }).length;
+  var me = D.lists.counsellors[0] || 'Ms. Maria';
+  var mine = R.filter(function (r) { return r.status === 'Enrolled' && r.counsellor === me; }).length;
+  var repeat = L.filter(function (l) { return l.enrolled > 1; }).length;
+  var due = dueRecords().filter(function (r) { return midnight(parseD(r.followUp)) <= t; }).length;
+  var k = [
+    ['Learners', L.length, 'var(--rose-soft)', L.filter(function (l) { return l.returning; }).length + ' with 2+ courses', 'learners'],
+    ['Course records', R.length, 'var(--lav-soft)', week + ' added this week', 'learners'],
+    ['Enrolled', enrolled, 'var(--mint-soft)', (R.length ? Math.round(enrolled / R.length * 100) : 0) + '% conversion', 'Enrolled'],
+    ['Enrolled under ' + me, mine, '#ddf4ea', 'as counsellor', 'mine'],
+    ['Repeat enrollees', repeat, 'var(--lav-soft)', 'enrolled in 2+ courses', 'returning'],
+    ['Follow-ups due', due, 'var(--peach-soft)', 'today or overdue', 'followups']
+  ];
+  document.getElementById('kpis').innerHTML = k.map(function (x, i) {
+    return '<div class="kpi click" data-i="' + i + '" style="--c:' + x[2] + '"><b>' + x[1] + '</b><span>' + esc(x[0]) + '</span><small>' + esc(x[3]) + '</small></div>';
+  }).join('');
+  document.querySelectorAll('#kpis .kpi').forEach(function (el) {
+    el.onclick = function () {
+      var a = k[+el.dataset.i][4];
+      if (a === 'followups') return show('followups');
+      resetFilters();
+      if (a === 'Enrolled') document.getElementById('fStatus').value = 'Enrolled';
+      if (a === 'mine') document.getElementById('fCounsellor').value = me;
+      if (a === 'returning') document.getElementById('fReturning').checked = true;
+      renderLearners(); show('learners');
+    };
+  });
+  bars(document.getElementById('pipeline'), countBy(R, function (r) { return r.status; }), D.lists.statuses,
+    function (s) { return STATUS_COLORS[s] || 'var(--rose)'; },
+    function (s) { resetFilters(); document.getElementById('fStatus').value = s; renderLearners(); show('learners'); });
+
+  function convTable(el, key, list, label) {
+    var rows = list.map(function (v) {
+      var all = R.filter(function (r) { return r[key] === v; }), en = all.filter(function (r) { return r.status === 'Enrolled'; }).length;
+      return '<tr><td>' + esc(v) + '</td><td class="num">' + all.length + '</td><td class="num">' + en + '</td><td class="num">' + (all.length ? Math.round(en / all.length * 100) : 0) + '%</td></tr>';
+    }).join('');
+    el.innerHTML = '<tr><th>' + label + '</th><th class="num">Records</th><th class="num">Enrolled</th><th class="num">Conv.</th></tr>' + rows;
+  }
+  convTable(document.getElementById('sources'), 'source', D.lists.sources, 'Source');
+  convTable(document.getElementById('counsellors'), 'counsellor', D.lists.counsellors, 'Counsellor');
+  var cc = countBy(R, function (r) { return r.course; });
+  bars(document.getElementById('topCourses'), cc, Object.keys(cc).sort(function (a, b) { return cc[b] - cc[a]; }).slice(0, 7), function () { return 'var(--lav)'; },
+    function (c) { resetFilters(); document.getElementById('q').value = c; renderLearners(); show('learners'); });
+  var latest = R.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; }).slice(0, 6);
+  document.getElementById('latest').innerHTML = latest.length ? latest.map(function (r) {
+    return '<div class="lc" style="padding:7px 0;border-bottom:1px dashed var(--line);cursor:pointer" data-l="' + esc(r.learnerId) + '"><span class="t" style="flex:1"><b style="color:var(--plum)">' + esc(r.name) + '</b><br><small class="muted">' + esc(r.course) + ' · ' + fmtD(r.date) + '</small></span>' + stChip(r.status) + '</div>';
+  }).join('') : '<p class="muted">No inquiries yet. They will appear here when students use the portal form.</p>';
+  document.querySelectorAll('#latest [data-l]').forEach(function (el) { el.onclick = function () { openLearner(el.dataset.l); }; });
+}
+
+function fillFilters() {
+  function keep(id, list, blank) { var el = document.getElementById(id), v = el.value; el.innerHTML = opts(list, v, blank); }
+  keep('fStatus', D.lists.statuses, 'All statuses');
+  keep('fSource', D.lists.sources, 'All lead sources');
+  keep('fCounsellor', D.lists.counsellors, 'All counsellors');
+}
+function resetFilters() {
+  ['q', 'fStatus', 'fSource', 'fCounsellor'].forEach(function (id) { document.getElementById(id).value = ''; });
+  document.getElementById('fReturning').checked = false;
+}
+
+function learnerRow(l, extra) {
+  var stale = l.open && (!l.lastContact || days(midnight(parseD(l.lastContact)), today()) >= 14);
+  return '<div class="lrow" data-l="' + esc(l.id) + '">' +
+    '<div class="av">' + esc(initials(l.name)) + '</div>' +
+    '<div class="lname"><b>' + esc(l.name) + '</b><small>' + esc(l.phone) + ' · ' + esc(l.id) + '</small></div>' +
+    '<div class="lcourses">' + l.records.map(function (r) { return '<div class="lc">' + stChip(r.status) + '<span class="t">' + esc(r.course) + '</span></div>'; }).join('') + (extra || '') + '</div>' +
+    '<div class="lmeta">' + (l.returning ? '<span class="pill ret">Returning · ' + l.records.length + ' courses</span>' : '') +
+      (l.source ? '<span class="pill src">' + esc(l.source) + '</span>' : '') +
+      '<span class="pill' + (stale ? ' warn' : '') + '">' + esc(ago(l.lastContact)) + '</span></div>' +
+    '<div class="lact"><a class="icon-btn wa" href="' + waLink(l.phone) + '" target="_blank" rel="noopener" title="WhatsApp" data-stop>' + ICON.wa + '</a>' +
+      '<a class="icon-btn" href="tel:' + esc(String(l.phone).replace(/[^\d+]/g, '')) + '" title="Call" data-stop>' + ICON.call + '</a></div>' +
+    '</div>';
+}
+function bindRows(el) {
+  el.querySelectorAll('[data-stop]').forEach(function (a) { a.onclick = function (e) { e.stopPropagation(); }; });
+  el.querySelectorAll('.lrow').forEach(function (r) { r.onclick = function () { openLearner(r.dataset.l); }; });
+}
+
+function renderLearners() {
+  var q = document.getElementById('q').value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  var st = document.getElementById('fStatus').value, src = document.getElementById('fSource').value,
+    cs = document.getElementById('fCounsellor').value, ret = document.getElementById('fReturning').checked, sort = document.getElementById('fSort').value;
+  var list = L.filter(function (l) {
+    if (ret && !l.returning) return false;
+    if (st && !l.records.some(function (r) { return r.status === st; })) return false;
+    if (src && !l.records.some(function (r) { return r.source === src; })) return false;
+    if (cs && !l.records.some(function (r) { return r.counsellor === cs; })) return false;
+    return q.every(function (w) { return l.hay.indexOf(w) > -1; });
+  });
+  list.sort(sort === 'name' ? function (a, b) { return a.name.localeCompare(b.name); }
+    : sort === 'stale' ? function (a, b) { return (a.lastContact || '0') < (b.lastContact || '0') ? -1 : 1; }
+    : function (a, b) { return a.latest < b.latest ? 1 : -1; });
+  document.getElementById('lcount').textContent = list.length + ' of ' + L.length + ' learners';
+  var el = document.getElementById('learnerList');
+  el.innerHTML = list.length ? list.map(function (l) { return learnerRow(l); }).join('')
+    : '<div class="empty"><b>' + (L.length ? 'No learners match these filters' : 'No learners yet') + '</b>' + (L.length ? 'Try clearing the search or filters.' : 'Inquiries from the portal and learners you add will appear here.') + '</div>';
+  bindRows(el);
+}
+
+function dueRecords() {
+  var limit = new Date(today().getTime() + 7 * 86400000);
+  return D.records.filter(function (r) { var d = parseD(r.followUp); return d && OPEN(r.status) && midnight(d) <= limit; })
+    .sort(function (a, b) { return a.followUp < b.followUp ? -1 : 1; });
+}
+function renderFollowups() {
+  var due = dueRecords(), t = today();
+  var overdue = due.filter(function (r) { return midnight(parseD(r.followUp)) <= t; }).length;
+  document.getElementById('nFollow').textContent = overdue;
+  var el = document.getElementById('dueList');
+  el.innerHTML = due.length ? due.map(function (r) {
+    var l = findL(r.learnerId), n = days(t, midnight(parseD(r.followUp)));
+    var tag = n < 0 ? '<span class="pill warn">' + (-n) + ' days overdue</span>' : n === 0 ? '<span class="pill warn">Due today</span>' : '<span class="pill">In ' + n + ' days</span>';
+    return learnerRow(l, '<div class="lc" style="margin-top:2px">' + tag + '<span class="t muted">' + esc(r.course) + ' · ' + fmtD(r.followUp) + '</span></div>');
+  }).join('') : '<div class="empty"><b>Nothing due</b>Set a follow-up date on a course or when you log a contact.</div>';
+  bindRows(el);
+  var stale = L.filter(function (l) { return l.open && (!l.lastContact || days(midnight(parseD(l.lastContact)), t) >= 14); })
+    .sort(function (a, b) { return (a.lastContact || '0') < (b.lastContact || '0') ? -1 : 1; });
+  var s = document.getElementById('staleList');
+  s.innerHTML = stale.length ? stale.map(function (l) { return learnerRow(l); }).join('') : '<div class="empty"><b>All caught up</b>Every open learner has been contacted in the last 14 days.</div>';
+  bindRows(s);
+}
+
+function renderQuiz() {
+  var Q = D.quiz;
+  bars(document.getElementById('qInterest'), countBy(Q, function (x) { return x.interest; }), null, function () { return 'var(--rose)'; });
+  bars(document.getElementById('qGoal'), countBy(Q, function (x) { return x.goal; }), null, function () { return 'var(--lav)'; });
+  bars(document.getElementById('qCert'), countBy(Q, function (x) { return x.cert; }), null, function () { return 'var(--mint)'; });
+  bars(document.getElementById('qBudget'), countBy(Q, function (x) { return x.budget; }), null, function () { return 'var(--peach)'; });
+  var rows = Q.slice().reverse().slice(0, 50);
+  document.getElementById('qTable').innerHTML = '<tr><th>Date</th><th>Interest</th><th>Goal</th><th>Certificate</th><th>Budget</th><th>Suggested</th></tr>' +
+    (rows.length ? rows.map(function (x) { return '<tr><td>' + fmtDT(x.date) + '</td><td>' + esc(x.interest) + '</td><td>' + esc(x.goal) + '</td><td>' + esc(x.cert) + '</td><td>' + esc(x.budget) + '</td><td>' + esc(x.suggested) + '</td></tr>'; }).join('')
+      : '<tr><td colspan="6" class="muted">No quiz results yet.</td></tr>');
+}
+
+/* ---------- learner drawer ---------- */
+function openLearner(id, keep) {
+  var l = findL(id); if (!l) { closeDrawer(); return; }
+  current = id;
+  var dr = document.getElementById('drawer'), scroll = keep ? (dr.querySelector('.dbody') || {}).scrollTop : 0;
+  var S = D.lists;
+  dr.innerHTML =
+    '<div class="dhead"><div class="av">' + esc(initials(l.name)) + '</div><div style="flex:1;min-width:0"><h3>' + esc(l.name) + '</h3>' +
+      '<small class="muted">' + esc(l.id) + ' · first added ' + fmtD(l.first) + '</small><div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap">' +
+      (l.returning ? '<span class="pill ret">Returning learner · ' + l.records.length + ' courses</span>' : '') + '<span class="pill">' + esc(ago(l.lastContact)) + '</span></div></div>' +
+      '<button class="icon-btn" id="dClose" aria-label="Close">✕</button></div>' +
+    '<div class="dbody">' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+        '<a class="btn btn-wa btn-sm" href="' + waLink(l.phone) + '" target="_blank" rel="noopener">' + ICON.wa.replace('<svg', '<svg width="16" height="16"') + ' WhatsApp</a>' +
+        '<a class="btn btn-line btn-sm" href="tel:' + esc(String(l.phone).replace(/[^\d+]/g, '')) + '">Call</a>' +
+        (l.email ? '<a class="btn btn-line btn-sm" href="mailto:' + esc(l.email) + '">Email</a>' : '') +
+      '</div>' +
+
+      '<div class="sec"><h4>Contact details</h4><form class="form" id="lForm">' +
+        '<div class="fld full"><label>Full name</label><input class="f" name="name" value="' + esc(l.name) + '"></div>' +
+        '<div class="fld"><label>Phone / WhatsApp</label><input class="f" name="phone" value="' + esc(l.phone) + '"></div>' +
+        '<div class="fld"><label>Email</label><input class="f" name="email" value="' + esc(l.email) + '"></div>' +
+        '<div class="row-actions full" style="margin-top:0"><button class="btn btn-line btn-sm">Save details</button></div></form></div>' +
+
+      '<div class="sec"><h4>Courses <button class="btn btn-main btn-sm" id="addCourse">＋ Add another course</button></h4>' +
+        l.records.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; }).map(function (r) {
+          return '<form class="rec ' + esc(String(r.status).replace(/\s+/g, '-')) + '" data-r="' + esc(r.id) + '">' +
+            '<div class="rec-top"><div><b>' + esc(r.course) + '</b><small>' + esc(r.id) + ' · added ' + fmtD(r.date) + (r.category ? ' · ' + esc(r.category) : '') + (r.fee ? ' · ' + esc(r.fee) : '') + ' · via ' + esc(r.via || '—') + '</small></div>' + stChip(r.status) + '</div>' +
+            '<div class="form">' +
+              '<div class="fld"><label>Status</label><select class="f" name="status">' + opts(S.statuses, r.status) + '</select></div>' +
+              '<div class="fld"><label>Counsellor</label><select class="f" name="counsellor">' + opts(S.counsellors, r.counsellor, '—') + '</select></div>' +
+              '<div class="fld"><label>Follow-up date</label><input class="f" type="date" name="followUp" value="' + esc(r.followUp) + '"></div>' +
+              '<div class="fld"><label>Enrolled date</label><input class="f" type="date" name="enrolledDate" value="' + esc(r.enrolledDate) + '"></div>' +
+              '<div class="fld full"><label>Notes</label><textarea class="f" name="notes">' + esc(r.notes) + '</textarea></div>' +
+            '</div>' +
+            '<details class="more"><summary>More details ▾</summary><div class="form">' +
+              '<div class="fld"><label>Lead source</label><select class="f" name="source">' + opts(S.sources, r.source, '—') + '</select></div>' +
+              '<div class="fld"><label>Source details</label><input class="f" name="sourceDetail" value="' + esc(r.sourceDetail) + '"></div>' +
+              '<div class="fld"><label>Payment option</label><select class="f" name="pay">' + opts(['One-time payment', 'Instalment', 'Not sure yet'], r.pay, 'Not decided') + '</select></div>' +
+              '<div class="fld"><label>Study mode</label><select class="f" name="mode">' + opts(['Online', 'In person', 'No preference'], r.mode, '—') + '</select></div>' +
+              '<div class="fld"><label>Preferred start</label><input class="f" name="start" value="' + esc(r.start) + '"></div>' +
+              '<div class="fld"><label>Best time to contact</label><input class="f" name="time" value="' + esc(r.time) + '"></div>' +
+              (r.message ? '<div class="fld full"><label>Learner\'s message</label><div class="note" style="margin:0">' + esc(r.message) + '</div></div>' : '') +
+            '</div></details>' +
+            '<div class="row-actions"><button class="btn btn-main btn-sm">Save course</button></div></form>';
+        }).join('') + '</div>' +
+
+      '<div class="sec"><h4>Log a contact</h4><form class="card" id="logForm" style="padding:14px"><div class="form">' +
+        '<div class="fld"><label>Contact type</label><select class="f" name="type">' + opts(S.contactTypes, 'Call') + '</select></div>' +
+        '<div class="fld"><label>About</label><select class="f" name="recordId"><option value="">General (all courses)</option>' + l.records.map(function (r) { return '<option value="' + esc(r.id) + '"' + (l.records.length === 1 ? ' selected' : '') + '>' + esc(r.course) + '</option>'; }).join('') + '</select></div>' +
+        '<div class="fld full"><label>What happened?</label><textarea class="f" name="note" placeholder="e.g. Called about fees, will visit on Saturday"></textarea></div>' +
+        '<div class="fld"><label>New status (optional)</label><select class="f" name="statusAfter">' + opts(S.statuses, '', 'Keep current status') + '</select></div>' +
+        '<div class="fld"><label>Next follow-up (optional)</label><input class="f" type="date" name="nextFollowUp"></div>' +
+      '</div><div class="row-actions"><button class="btn btn-main btn-sm">Save to history</button></div></form></div>' +
+
+      '<div class="sec"><h4>Contact history <small class="muted" style="text-transform:none;letter-spacing:0">' + l.logs.length + ' entries</small></h4>' +
+        (l.logs.length ? '<div class="timeline">' + l.logs.map(function (g) {
+          return '<div class="tl" style="--c:' + (TYPE_COLORS[g.type] || 'var(--rose)') + '"><div class="h"><b>' + esc(g.type) + (g.course ? ' · ' + esc(g.course) : '') + '</b><span>' + fmtDT(g.date) + (g.by ? ' · ' + esc(g.by) : '') + '</span></div>' +
+            (g.note ? '<p>' + esc(g.note) + '</p>' : '') +
+            ((g.statusAfter || g.nextFollowUp) ? '<div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">' + stChip(g.statusAfter) + (g.nextFollowUp ? '<span class="pill">Follow up ' + fmtD(g.nextFollowUp) + '</span>' : '') + '</div>' : '') + '</div>';
+        }).join('') + '</div>' : '<p class="muted">No contacts logged yet.</p>') +
+      '</div>' +
+    '</div>';
+  dr.classList.add('on'); document.getElementById('overlay').classList.add('on');
+  if (keep) dr.querySelector('.dbody').scrollTop = scroll;
+  document.getElementById('dClose').onclick = closeDrawer;
+  document.getElementById('addCourse').onclick = function () { openAdd(l); };
+
+  document.getElementById('lForm').onsubmit = function (e) {
+    e.preventDefault(); var f = e.target;
+    if (!f.name.value.trim() || !f.phone.value.trim()) return toast('Name and phone are required.', true);
+    busy(true);
+    api('updateLearner', l.id, { name: f.name.value, phone: f.phone.value, email: f.email.value })
+      .then(function () { toast('Contact details saved'); return load(true); }).catch(fail);
+  };
+  dr.querySelectorAll('form.rec').forEach(function (f) {
+    f.onsubmit = function (e) {
+      e.preventDefault(); var ch = {};
+      ['status', 'counsellor', 'followUp', 'enrolledDate', 'notes', 'source', 'sourceDetail', 'pay', 'mode', 'start', 'time'].forEach(function (k) { if (f[k]) ch[k] = f[k].value; });
+      busy(true);
+      api('updateRecord', f.dataset.r, ch).then(function () { toast('Course saved'); return load(true); }).catch(fail);
+    };
+  });
+  document.getElementById('logForm').onsubmit = function (e) {
+    e.preventDefault(); var f = e.target;
+    if (!f.note.value.trim() && !f.statusAfter.value) return toast('Write a note or choose a new status.', true);
+    if (f.statusAfter.value && !f.recordId.value) return toast('Choose which course the new status is for.', true);
+    busy(true);
+    api('logContact', { learnerId: l.id, recordId: f.recordId.value, type: f.type.value, note: f.note.value, statusAfter: f.statusAfter.value, nextFollowUp: f.nextFollowUp.value })
+      .then(function () { toast('Saved to contact history'); return load(true); }).catch(fail);
+  };
+}
+function closeDrawer() { current = null; document.getElementById('drawer').classList.remove('on'); document.getElementById('overlay').classList.remove('on'); }
+
+/* ---------- add learner / add course ---------- */
+var addFor = null;
+function openAdd(l) {
+  addFor = l || null;
+  var f = document.getElementById('addForm'); f.reset();
+  var S = D.lists;
+  f.source.innerHTML = opts(S.sources, l ? l.source : '', 'Choose…');
+  f.counsellor.innerHTML = opts(S.counsellors, S.counsellors[0]);
+  f.status.innerHTML = opts(S.statuses, 'Inquired');
+  document.querySelectorAll('[data-newonly]').forEach(function (el) { el.hidden = !!l; });
+  document.getElementById('addTitle').textContent = l ? 'Add a course for ' + l.name : 'Add learner';
+  document.getElementById('addSubmit').textContent = l ? 'Add course' : 'Save learner';
+  document.getElementById('addNote').innerHTML = l ? '<div class="note">This course will be added to ' + esc(l.name) + ' (' + esc(l.id) + '), so their history stays together.</div>' : '';
+  document.getElementById('addModal').classList.add('on');
+  setTimeout(function () { (l ? f.course : f.name).focus(); }, 50);
+}
+function checkExisting() {
+  if (addFor) return;
+  var f = document.getElementById('addForm'), p = f.phone.value.replace(/\D/g, '').slice(-8), m = f.email.value.trim().toLowerCase();
+  var hit = L.filter(function (l) { return (p.length >= 7 && String(l.phone).replace(/\D/g, '').slice(-8) === p) || (m && String(l.email).toLowerCase() === m); })[0];
+  document.getElementById('addNote').innerHTML = hit ? '<div class="note warn">This phone or email already belongs to <b>' + esc(hit.name) + '</b> (' + esc(hit.id) + '). Saving will add the course to their existing record.</div>' : '';
+}
+function courseInfo(name) {
+  for (var i = 0; i < CATALOG.length; i++) if (CATALOG[i][1] === name) return CATALOG[i];
+  return null;
+}
+
+/* ---------- events ---------- */
+function show(v) {
+  document.querySelectorAll('.tab').forEach(function (t) { t.setAttribute('aria-selected', t.dataset.view === v ? 'true' : 'false'); });
+  document.querySelectorAll('.view').forEach(function (s) { s.hidden = s.id !== 'v-' + v; });
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll('.tab').forEach(function (t) { t.onclick = function () { show(t.dataset.view); }; });
+['q', 'fStatus', 'fSource', 'fCounsellor', 'fSort', 'fReturning'].forEach(function (id) {
+  var el = document.getElementById(id); el.addEventListener(id === 'q' ? 'input' : 'change', renderLearners);
+});
+document.getElementById('refreshBtn').onclick = function () { load(true); };
+document.getElementById('addBtn').onclick = function () { openAdd(null); };
+document.getElementById('overlay').onclick = closeDrawer;
+document.querySelectorAll('[data-close]').forEach(function (b) { b.onclick = function () { document.getElementById(b.dataset.close).classList.remove('on'); }; });
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 'Escape') return;
+  var m = document.getElementById('addModal');
+  if (m.classList.contains('on')) m.classList.remove('on'); else closeDrawer();
+});
+var af = document.getElementById('addForm');
+af.phone.addEventListener('input', checkExisting);
+af.email.addEventListener('input', checkExisting);
+af.onsubmit = function (e) {
+  e.preventDefault(); var f = af;
+  if (!addFor && (!f.name.value.trim() || !f.phone.value.trim())) return toast('Name and phone are required.', true);
+  if (!f.course.value.trim()) return toast('Choose or type a course.', true);
+  if (!f.source.value) return toast('Choose a lead source.', true);
+  var info = courseInfo(f.course.value.trim());
+  var d = {
+    learnerId: addFor ? addFor.id : '', name: f.name.value, phone: f.phone.value, email: f.email.value,
+    course: f.course.value.trim(), category: info ? info[0] : '', fee: info && info[2] ? 'QAR ' + Number(info[2]).toLocaleString('en-US') + ' one-time' + (info[3] ? ' / QAR ' + Number(info[3]).toLocaleString('en-US') + ' instalment' : '') : '',
+    source: f.source.value, sourceDetail: f.sourceDetail.value, counsellor: f.counsellor.value, status: f.status.value,
+    pay: f.pay.value, mode: f.mode.value, followUp: f.followUp.value, start: f.start.value, notes: f.notes.value, consent: addFor ? true : f.consent.checked
+  };
+  document.getElementById('addSubmit').disabled = true; busy(true);
+  api('addLearner', d).then(function (res) {
+    document.getElementById('addSubmit').disabled = false;
+    document.getElementById('addModal').classList.remove('on');
+    toast(res.returning ? 'Course added to existing learner ' + res.learnerId : 'Learner added (' + res.learnerId + ')');
+    return load().then(function () { openLearner(res.learnerId); });
+  }).catch(function (e) { document.getElementById('addSubmit').disabled = false; fail(e); });
+};
+
+document.getElementById('courseList').innerHTML = CATALOG.map(function (c) { return '<option value="' + esc(c[1]) + '">' + esc(c[0]) + '</option>'; }).join('');
+load();
+</script>
+</body>
+</html>

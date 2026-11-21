@@ -389,6 +389,12 @@
     background-repeat:no-repeat;background-position:right 14px center;background-size:18px}
   .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--rose);background:#fff;box-shadow:0 0 0 4px rgba(247,178,204,.3)}
   .field.invalid input,.field.invalid select{border-color:var(--rose-deep);background:#fff3f7}
+  .consent{display:flex;gap:10px;align-items:flex-start;font-size:.84rem;color:var(--plum);background:#fffafc;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;line-height:1.45}
+  .consent input{width:20px;height:20px;flex-shrink:0;margin-top:1px;accent-color:var(--rose-deep)}
+  .consent i{color:var(--rose-deep);font-style:normal}
+  .consent.invalid{border-color:var(--rose-deep);background:#fff3f7}
+  .field[hidden]{display:none}
+  .hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
   .form-error{color:#c2436f;font-size:.86rem;font-weight:500;background:#fff0f5;border-radius:12px;padding:10px 14px}
   .send{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
   .send .btn-mail{border:1.5px solid var(--line)}
@@ -492,6 +498,8 @@
   2) Email: set to maria@me.learnovateqa.com (2 places).
   3) Academy links: each is marked with an "EDIT LINK" comment below.
   4) Course catalogue (fees, certificates): edit the CATALOG list in the script.
+  5) Learner database: paste your Apps Script "Inquiry receiver" web app URL
+     into INQUIRY_ENDPOINT in the script (see dashboard/SETUP.md).
   =====================================================================
 -->
 
@@ -795,10 +803,28 @@
             </select>
           </div>
         </div>
+        <div class="row2">
+          <div class="field">
+            <label for="fHeard">How did you hear about us? <i>*</i></label>
+            <select id="fHeard" name="heard" required>
+              <option value="">Choose one…</option>
+              <option value="Social media">Social media (Instagram, Facebook, TikTok…)</option>
+              <option value="Referral">A friend, family member or colleague</option>
+              <option value="School-provided">Learnovate Qatar school</option>
+              <option value="Direct">I found it myself</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="fHeardDetail" id="heardLabel">Details (optional)</label>
+            <input id="fHeardDetail" name="heardDetail" type="text" maxlength="120" placeholder="Anything you'd like to add">
+          </div>
+        </div>
         <div class="field">
           <label for="fMsg">Message (optional)</label>
           <textarea id="fMsg" name="message" rows="3" placeholder="Your current level, goals or any questions…"></textarea>
         </div>
+        <label class="consent" id="consentWrap"><input type="checkbox" id="fConsent" name="consent"> <span>I agree that Ms. Maria and Learnovate Qatar may contact me about courses and keep my details for this purpose. <i>*</i></span></label>
+        <div class="hp" aria-hidden="true"><label>Leave this empty <input id="fWebsite" name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
         <p class="form-error" id="formError" role="alert" hidden></p>
         <div class="send">
           <button type="submit" class="btn btn-wa" data-via="wa">
@@ -915,6 +941,17 @@
   /* ---------- Enrollment form -> WhatsApp / Email ---------- */
   var WA_NUMBER = '97470771337';
   var EMAIL = 'maria@me.learnovateqa.com';
+  // Paste the "Inquiry receiver" web app URL from Apps Script here (see dashboard/SETUP.md).
+  // While it is empty, the forms still open WhatsApp/email but nothing is saved to the sheet.
+  var INQUIRY_ENDPOINT = '';
+  function saveToDatabase(payload) {
+    if (!INQUIRY_ENDPOINT) return;
+    var body = JSON.stringify(payload);
+    try {
+      var sent = navigator.sendBeacon && navigator.sendBeacon(INQUIRY_ENDPOINT, new Blob([body], { type: 'text/plain;charset=utf-8' }));
+      if (!sent) fetch(INQUIRY_ENDPOINT, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body });
+    } catch (e) { /* saving is best-effort; WhatsApp/email still go through */ }
+  }
   var form = document.getElementById('enrollForm');
   var courseSel = document.getElementById('fCourse');
   var otherWrap = document.getElementById('otherWrap');
@@ -1300,6 +1337,8 @@
     var waText = encodeURIComponent('Hello Ms. Maria! I took the course finder quiz and would like your advice.\n\n' +
       'Interest: ' + summary[0] + '\nGoal: ' + summary[1] + '\n' + summary[2] + '\n' + summary[3] +
       (ranked.length ? '\n\nSuggested: ' + ranked.map(function (c) { return c.name; }).join(', ') : ''));
+    saveToDatabase({ type: 'quiz', interest: summary[0], goal: summary[1], cert: label('cert'), budget: label('budget'),
+      suggested: ranked.map(function (c) { return c.name; }).join(', ') });
     stage.innerHTML = '<div class="fq results">' +
       (ranked.length
         ? '<h4>Your top course matches 🎉</h4><p>' + summary.map(esc).join(' · ') + '</p><div class="cgrid">' + ranked.map(courseCard).join('') + '</div>'
@@ -1341,6 +1380,13 @@
     return '';
   }
 
+  var HEARD_LABELS = { 'Social media': ['Which platform?', 'e.g. Instagram, TikTok'], 'Referral': ['Who referred you?', 'Their name'], 'School-provided': ['Staff member or branch (optional)', 'e.g. front desk'], 'Direct': ['Details (optional)', "Anything you'd like to add"] };
+  document.getElementById('fHeard').addEventListener('change', function (e) {
+    var l = HEARD_LABELS[e.target.value] || HEARD_LABELS.Direct;
+    document.getElementById('heardLabel').textContent = l[0];
+    document.getElementById('fHeardDetail').placeholder = l[1];
+  });
+  document.getElementById('fConsent').addEventListener('change', function () { document.getElementById('consentWrap').classList.remove('invalid'); });
   form.addEventListener('input', function (e) {
     var f = e.target.closest('.field'); if (f) f.classList.remove('invalid');
   });
@@ -1351,12 +1397,14 @@
     function need(id, label) { if (!v(id)) { missing.push(label); document.getElementById(id).closest('.field').classList.add('invalid'); } }
     need('fName', 'your name'); need('fPhone', 'your phone number'); need('fCourse', 'a course');
     if (v('fCourse') === 'Other') need('fOther', 'which course you want');
+    need('fHeard', 'how you heard about us');
+    if (!document.getElementById('fConsent').checked) { missing.push('your consent to be contacted'); document.getElementById('consentWrap').classList.add('invalid'); }
     var em = v('fEmail');
     if (em && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { missing.push('a valid email'); document.getElementById('fEmail').closest('.field').classList.add('invalid'); }
     if (missing.length) {
       errBox.textContent = 'Please add ' + missing.join(', ') + '.';
       errBox.hidden = false;
-      var first = form.querySelector('.field.invalid input, .field.invalid select'); if (first) first.focus();
+      var first = form.querySelector('.field.invalid input, .field.invalid select, .consent.invalid input'); if (first) first.focus();
       return;
     }
     errBox.hidden = true;
@@ -1373,11 +1421,19 @@
       'Study mode: ' + v('fMode'),
       'Preferred start: ' + v('fStart'),
       'Best time to contact: ' + v('fContact'),
+      'Heard about us: ' + v('fHeard') + (v('fHeardDetail') ? ' (' + v('fHeardDetail') + ')' : ''),
       'Message: ' + (v('fMsg') || '-'),
       '',
       'Sent from the Elevate with Ms. Maria student portal'
     ];
     var text = lines.join('\n');
+    var picked = ALL.filter(function (c) { return c.name === v('fCourse'); })[0];
+    saveToDatabase({
+      type: 'inquiry', website: v('fWebsite'), name: v('fName'), phone: v('fPhone'), email: em, course: course,
+      category: picked ? picked.cat.name : '', fee: feeText(v('fCourse')), pay: v('fPay'), mode: v('fMode'),
+      start: v('fStart'), time: v('fContact'), source: v('fHeard'), sourceDetail: v('fHeardDetail'),
+      message: v('fMsg'), consent: true, via: via === 'mail' ? 'email' : 'whatsapp'
+    });
     if (via === 'mail') {
       location.href = 'mailto:' + EMAIL + '?subject=' + encodeURIComponent('Enrollment Request - ' + course + ' - ' + v('fName')) + '&body=' + encodeURIComponent(text);
     } else {

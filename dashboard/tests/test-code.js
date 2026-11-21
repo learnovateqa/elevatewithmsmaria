@@ -1,0 +1,54 @@
+// Server-side tests for Code.gs using an in-memory stand-in for Apps Script.
+// Run from the dashboard folder:  node tests/test-code.js tests Code.gs
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const S=process.argv[2], CODE=process.argv[3];
+const ctx={console}; ctx.globalThis=ctx; vm.createContext(ctx);
+vm.runInContext(fs.readFileSync(S+'/gas-mock.js','utf8'),ctx);
+vm.runInContext(fs.readFileSync(CODE,'utf8'),ctx);
+const M=ctx.__mock, E=M.sheets.Enrollments._data, LOG=M.sheets['Contact log']._data;
+const post=(o)=>JSON.parse(ctx.doPost({postData:{contents:JSON.stringify(o)}}).body);
+const isDate=(x)=>Object.prototype.toString.call(x)==='[object Date]';
+let ok=0; const t=(name,fn)=>{try{fn();ok++;console.log('PASS',name)}catch(e){console.log('FAIL',name,'-',e.message);process.exitCode=1}};
+
+let r1;
+t('portal inquiry creates learner + record',()=>{ r1=post({name:'Aisha Rahman',phone:'+974 5555 1234',email:'aisha@x.com',course:'Phlebotomy',category:'Health & Social Care',source:'Social media',sourceDetail:'Instagram',consent:true,via:'whatsapp',message:'Hi'});
+  assert.deepStrictEqual([r1.ok,r1.learnerId,r1.recordId,r1.returning],[true,'L-0001','R-0001',false]);
+  assert.strictEqual(E[1][3],'Aisha Rahman'); assert.strictEqual(E[1][4],'+974 5555 1234'); assert.strictEqual(E[1][16],'Inquired'); assert.strictEqual(E[1][15],'Ms. Maria'); assert.strictEqual(E[1][13],'Social media'); assert.strictEqual(E[1][21],'Portal (WhatsApp)');});
+t('email notification sent to owner',()=>{ assert.strictEqual(M.state.mails.length,1); assert.match(M.state.mails[0].subject,/New inquiry: Aisha Rahman/);});
+t('same phone, different course -> same learner, new record (multi-course)',()=>{ const r=post({name:'Aisha R.',phone:'55551234',course:'Caregiver – Level 4',source:'Referral',consent:true});
+  assert.deepStrictEqual([r.learnerId,r.recordId,r.returning],['L-0001','R-0002',true]); assert.strictEqual(E[2][3],'Aisha Rahman');});
+t('same learner, same open course -> no duplicate row, logged instead',()=>{ const r=post({name:'Aisha',phone:'+97455551234',course:'Phlebotomy',consent:true});
+  assert.strictEqual(r.duplicate,true); assert.strictEqual(r.recordId,'R-0001'); assert.strictEqual(E[3][0],''); assert.match(LOG[1][7],/again/);});
+t('match by email',()=>{ const r=post({name:'Aisha',phone:'+974 6666 0000',email:'AISHA@x.com ',course:'Medical Coding',consent:true}); assert.strictEqual(r.learnerId,'L-0001');});
+t('unknown source falls back to Direct',()=>{ const r=post({name:'Omar',phone:'+974 7000 1111',course:'IELTS Preparation',source:'Hacker',consent:true}); assert.strictEqual(r.learnerId,'L-0002'); assert.strictEqual(E[4][13],'Direct');});
+t('formula injection stored as text',()=>{ post({name:'=HYPERLINK("x")',phone:'+974 7111 2222',course:'@cmd',consent:true}); const row=E[5]; assert.strictEqual(typeof row[3],'string'); assert.strictEqual(row[3],'=HYPERLINK("x")'); assert.strictEqual(row[6],'@cmd');});
+t('missing consent rejected',()=>{ const r=post({name:'X',phone:'+974 7222 3333',course:'Baking'}); assert.strictEqual(r.ok,false); assert.strictEqual(E[6][0],'');});
+t('missing fields rejected',()=>{ const r=post({name:'',phone:'1',course:'',consent:true}); assert.strictEqual(r.ok,false);});
+t('honeypot ignored',()=>{ const r=post({website:'spam',name:'Bot',phone:'+974 7333 4444',course:'X',consent:true}); assert.strictEqual(r.ok,true); assert.strictEqual(E[6][0],'');});
+t('quiz saved',()=>{ const r=post({type:'quiz',interest:'Healthcare & caring',goal:'Start a new career',cert:'Yes',budget:'Flexible',suggested:'CNA L4, Phlebotomy'}); assert.strictEqual(r.ok,true); assert.strictEqual(M.sheets['Quiz results']._data[1][1],'Healthcare & caring');});
+t('dashboard add learner (walk-in, school-provided)',()=>{ const r=ctx.addLearner({name:'Fatima Noor',phone:'+974 3300 4400',course:'Montessori Teachers Training – Level 4',source:'School-provided',sourceDetail:'Ms. Hana',status:'Visited',followUp:'2026-11-25',consent:true});
+  assert.deepStrictEqual([r.learnerId,r.recordId],['L-0004','R-0006']); const row=E[6]; assert.strictEqual(row[21],'Dashboard'); assert.strictEqual(row[16],'Visited'); assert.ok(isDate(row[17]));});
+t('dashboard add course to existing learner',()=>{ const r=ctx.addLearner({learnerId:'L-0004',course:'Child Psychology – Level 4',source:'School-provided',status:'Enrolled'});
+  assert.strictEqual(r.returning,true); const row=E[7]; assert.strictEqual(row[3],'Fatima Noor'); assert.ok(isDate(row[18]),'enrolled date auto-set');});
+t('dashboard add with matching phone links to existing learner',()=>{ const r=ctx.addLearner({name:'Omar K',phone:'70001111',course:'PTE Preparation',source:'Direct'}); assert.strictEqual(r.learnerId,'L-0002');});
+t('updateRecord status -> Enrolled sets enrolled date + logs change',()=>{ const before=LOG.filter(r=>r[0]!=='').length; ctx.updateRecord('R-0001',{status:'Enrolled',notes:'Paid deposit',counsellor:'Ms. Maria'});
+  assert.strictEqual(E[1][16],'Enrolled'); assert.ok(isDate(E[1][18])); assert.strictEqual(E[1][19],'Paid deposit');
+  const after=LOG.filter(r=>r[0]!==''); assert.strictEqual(after.length,before+1); assert.match(after[after.length-1][7],/Inquired to Enrolled/);});
+t('updateRecord ignores non-editable fields',()=>{ ctx.updateRecord('R-0001',{learnerId:'L-9999',id:'X'}); assert.strictEqual(E[1][1],'L-0001'); assert.strictEqual(E[1][0],'R-0001');});
+t('logContact adds history, status + follow-up',()=>{ ctx.logContact({learnerId:'L-0002',recordId:'R-0004',type:'Call',note:'Discussed fees',statusAfter:'Contacted',nextFollowUp:'2026-11-28'});
+  const last=LOG.filter(r=>r[0]!=='').pop(); assert.deepStrictEqual([last[2],last[4],last[6],last[7],last[8],last[10]],['L-0002','R-0004','Call','Discussed fees','Contacted','Ms. Maria']);
+  assert.strictEqual(E[4][16],'Contacted'); assert.ok(isDate(E[4][17]));});
+t('logContact general note (no course)',()=>{ ctx.logContact({learnerId:'L-0001',type:'WhatsApp',note:'Sent brochure'}); const last=LOG.filter(r=>r[0]!=='').pop(); assert.strictEqual(last[4],'');});
+t('logContact requires note or status',()=>{ assert.throws(()=>ctx.logContact({learnerId:'L-0001'}));});
+t('updateLearner changes all rows',()=>{ const r=ctx.updateLearner('L-0001',{name:'Aisha Rahman Ali',phone:'+974 5555 1234'}); assert.strictEqual(r.updated,3); assert.ok([E[1],E[2],E[3]].every(x=>x[3]==='Aisha Rahman Ali'));});
+t('log IDs increment',()=>{ const ids=LOG.slice(1).filter(r=>r[0]!=='').map(r=>r[1]); assert.deepStrictEqual(ids,ids.map((_,i)=>'C-'+String(i+1).padStart(4,'0')));});
+let data;
+t('getDashboardData for owner',()=>{ data=ctx.getDashboardData(); assert.strictEqual(data.records.length,8); assert.ok(data.logs.length>=4); assert.strictEqual(data.quiz.length,1);
+  assert.strictEqual(JSON.stringify(data.lists.counsellors),'["Ms. Maria"]'); assert.match(data.records[0].date,/^\d{4}-\d\d-\d\dT/); assert.match(data.records.find(r=>r.id==='R-0004').followUp,/^2026-11-28$/);
+  JSON.stringify(data);});
+t('doGet owner gets dashboard',()=>{ assert.strictEqual(ctx.doGet().file,'Dashboard');});
+t('doGet non-owner / anonymous blocked',()=>{ M.state.activeUser=''; assert.ok(ctx.doGet().html.includes('Private')); M.state.activeUser='someone@else.com'; assert.ok(ctx.doGet().html.includes('Private'));});
+t('dashboard functions refuse non-owner',()=>{ ['getDashboardData'].forEach(f=>assert.throws(()=>ctx[f]())); assert.throws(()=>ctx.addLearner({name:'x',phone:'1234567',course:'y'})); assert.throws(()=>ctx.updateRecord('R-0001',{status:'Enrolled'})); assert.throws(()=>ctx.logContact({learnerId:'L-0001',note:'x'})); assert.throws(()=>ctx.updateLearner('L-0001',{name:'x'})); M.state.activeUser='owner@example.com';});
+t('portal still works anonymously',()=>{ M.state.activeUser=''; const r=post({name:'Anon',phone:'+974 7444 5555',course:'Barber',consent:true}); assert.strictEqual(r.ok,true); M.state.activeUser='owner@example.com';});
+console.log(ok+' passed');
+
