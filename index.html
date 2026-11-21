@@ -259,6 +259,28 @@
   .results .course:first-child::after{content:"💖 Best match";position:absolute;top:14px;left:18px;font-size:.68rem;font-weight:700;color:var(--rose-deep);background:var(--rose-soft);padding:3px 9px;border-radius:999px}
   .res-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:20px}
 
+
+  /* ---------- Career services ---------- */
+  .services{margin-top:48px;border-radius:28px;padding:34px;position:relative;overflow:hidden;scroll-margin-top:12px;
+    background:linear-gradient(135deg,#fff8e6 0%,#fff 45%,var(--rose-soft) 100%);border:1px solid var(--line);box-shadow:var(--shadow)}
+  .services::before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(253,214,120,.35),transparent 70%);right:-80px;top:-90px;pointer-events:none}
+  .svc-head{text-align:center;max-width:620px;margin:0 auto 24px;position:relative}
+  .svc-head h3{font-size:1.6rem;color:var(--plum);font-weight:700;margin:10px 0 6px;line-height:1.2}
+  .svc-head p{color:var(--muted);font-size:.95rem}
+  .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;position:relative}
+  .svc{background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .3s,box-shadow .3s}
+  .svc:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover)}
+  .svc-icon{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;font-size:1.8rem;background:linear-gradient(135deg,#fff1c7,var(--rose-soft));transition:transform .4s cubic-bezier(.3,1.6,.5,1)}
+  .svc:hover .svc-icon{transform:rotate(-8deg) scale(1.1)}
+  .svc h4{font-size:1.1rem;color:var(--plum);font-weight:700}
+  .svc > p{color:var(--muted);font-size:.9rem}
+  .svc ul{list-style:none;display:grid;gap:6px;margin:2px 0 6px;flex:1}
+  .svc li{font-size:.86rem;color:var(--ink);padding-left:22px;position:relative}
+  .svc li::before{content:"✓";position:absolute;left:0;top:0;width:16px;height:16px;border-radius:50%;background:#ddf4ea;color:#2f7d62;font-size:.68rem;font-weight:700;display:grid;place-items:center;margin-top:3px}
+  .svc-actions{display:grid;gap:8px}
+  .svc-actions .btn{width:100%;min-height:46px}
+  .c-career{--accent:#f6d27a;--accent-soft:#fff6dc;--accent-text:#a0720a;--accent-grad:linear-gradient(90deg,#fbe3a0,var(--rose),#fbe3a0)}
+
   /* ---------- Course catalogue ---------- */
   .hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
   .hero-cta .btn-enroll{margin-top:0}
@@ -353,6 +375,7 @@
   .school-card b{display:block;color:var(--plum);font-size:.95rem}
   .school-card small{display:block;color:var(--muted);font-size:.8rem}
   .sc-go{margin-left:auto;color:var(--sky-deep);font-weight:700;font-size:1.1rem}
+  @media (max-width:900px){ .svc-grid{grid-template-columns:1fr;max-width:520px;margin:0 auto} }
   @media (max-width:900px){ .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-width:360px} }
 
   /* ---------- Enroll ---------- */
@@ -465,6 +488,7 @@
     .grid{grid-template-columns:1fr}
     .tip{grid-template-columns:1fr;padding:20px}
     .enroll{grid-template-columns:1fr;padding:22px;gap:22px}
+    .services{padding:24px 16px}
     .finder{padding:24px 16px}
     .finder::after{display:none}
     .opts{grid-template-columns:1fr}
@@ -534,7 +558,7 @@
     <div class="hero-row">
     <div class="hero">
       <h2>All your academies, <span>one portal.</span></h2>
-      <p>Choose your course below to continue learning — English, GED, Healthcare & BLS, Business, HR, Admin, Customer Care and Logistics, with Midwifery and Train the Trainer coming soon, all in one place.</p>
+      <p>Choose your course below to continue learning — English, GED, Healthcare & BLS, Business, HR, Admin, Customer Care and Logistics, with Midwifery and Train the Trainer coming soon, plus CV writing, recommendation letters and mock interviews.</p>
       <div class="stats">
         <div class="stat"><b>9</b><small>Academies</small></div>
         <div class="stat"><b>+2</b><small>Coming Soon</small></div>
@@ -672,6 +696,47 @@
 
     </section>
 
+    <!-- ============ CAREER SERVICES ============ -->
+    <section class="services" id="services" aria-labelledby="svcTitle">
+      <div class="svc-head">
+        <span class="eyebrow">Career services</span>
+        <h3 id="svcTitle">Get ready for your next step</h3>
+        <p>Personal support from Ms. Maria for job, university and scholarship applications.</p>
+      </div>
+      <div class="svc-grid">
+      <article class="svc">
+        <div class="svc-icon" aria-hidden="true">📄</div>
+        <h4>CV Writing &amp; Review</h4>
+        <p>A clear, professional CV that shows your skills and experience at their best, prepared one-to-one with Ms. Maria.</p>
+        <ul><li>A new CV, or a review of the one you have</li><li>Tailored to the job or programme you want</li><li>Clear, professional and ready to send</li></ul>
+        <div class="svc-actions">
+          <a class="btn btn-wa" href="https://wa.me/97470771337?text=Hello%20Ms.%20Maria%2C%20I%20would%20like%20help%20with%20my%20CV." target="_blank" rel="noopener">💬 Request on WhatsApp</a>
+          <button class="btn btn-browse" type="button" data-enroll="CV Writing &amp; Review">📝 Request with form</button>
+        </div>
+      </article>
+      <article class="svc">
+        <div class="svc-icon" aria-hidden="true">✉️</div>
+        <h4>Recommendation Letter</h4>
+        <p>A professional recommendation letter to support your next step, whether that is a new job, further study or a scholarship.</p>
+        <ul><li>For job, university and scholarship applications</li><li>Highlights your skills, progress and strengths</li><li>Written in a formal, professional format</li></ul>
+        <div class="svc-actions">
+          <a class="btn btn-wa" href="https://wa.me/97470771337?text=Hello%20Ms.%20Maria%2C%20I%20would%20like%20to%20request%20a%20recommendation%20letter." target="_blank" rel="noopener">💬 Request on WhatsApp</a>
+          <button class="btn btn-browse" type="button" data-enroll="Recommendation Letter">📝 Request with form</button>
+        </div>
+      </article>
+      <article class="svc">
+        <div class="svc-icon" aria-hidden="true">🎤</div>
+        <h4>Mock Interview Practice</h4>
+        <p>Practise real interview questions with Ms. Maria and get honest, friendly feedback before the big day.</p>
+        <ul><li>Job and university interview practice</li><li>Common and role-specific questions</li><li>Feedback on your answers, confidence and body language</li></ul>
+        <div class="svc-actions">
+          <a class="btn btn-wa" href="https://wa.me/97470771337?text=Hello%20Ms.%20Maria%2C%20I%20would%20like%20to%20book%20a%20mock%20interview." target="_blank" rel="noopener">💬 Request on WhatsApp</a>
+          <button class="btn btn-browse" type="button" data-enroll="Mock Interview Practice">📝 Request with form</button>
+        </div>
+      </article>
+      </div>
+    </section>
+
     <!-- ============ COURSE FINDER ============ -->
     <section class="finder" id="finder" aria-labelledby="finderTitle">
       <div class="finder-head">
@@ -751,9 +816,9 @@
           </div>
         </div>
         <div class="field">
-          <label for="fCourse">Course <i>*</i></label>
+          <label for="fCourse">Course or service <i>*</i></label>
           <select id="fCourse" name="course" required>
-            <option value="">Choose a course…</option>
+            <option value="">Choose a course or service…</option>
             <!-- course options are filled in automatically from the catalogue -->
             <optgroup label="Something else" id="optOther">
               <option value="Other">Other course</option>
@@ -919,7 +984,7 @@
 
 
   /* ---------- Scroll reveal animation ---------- */
-  var revealEls = document.querySelectorAll('.tabs, .section-head, .card, .finder, .tip, .enroll, .cgroup');
+  var revealEls = document.querySelectorAll('.tabs, .section-head, .card, .services, .finder, .tip, .enroll, .cgroup');
   if ('IntersectionObserver' in window) {
     revealEls.forEach(function (el, i) {
       el.classList.add('reveal');
@@ -1120,6 +1185,11 @@
       ['GED', 4000, 4500, null, 0, '8 sessions', 'per subject', ''],
       ['PMP', 1500, 2000, null, 0, '2 hours', '10 sessions', ''],
       ['ITIL', 2000, 2500, null, 0, '2 hours', '10 sessions', '']
+    ]},
+    { id: 'career', name: 'Career Services', icon: '📝', courses: [
+      ['CV Writing & Review', null, null, null, null, '', '', ''],
+      ['Recommendation Letter', null, null, null, null, '', '', ''],
+      ['Mock Interview Practice', null, null, null, null, '', '', '']
     ]}
   ];
 
@@ -1152,7 +1222,7 @@
   var chipsEl = document.getElementById('catChips');
   var gridEl = document.getElementById('catGrid');
   var statusEl = document.getElementById('catStatus');
-  var catClass = { health: 'c-health', teach: 'c-teach', mgmt: 'c-mgmt', prof: 'c-prof', safety: 'c-safety', beauty: 'c-beauty', lang: 'c-lang' };
+  var catClass = { health: 'c-health', teach: 'c-teach', mgmt: 'c-mgmt', prof: 'c-prof', safety: 'c-safety', beauty: 'c-beauty', lang: 'c-lang', career: 'c-career' };
 
   function chip(id, label, count) {
     return '<button class="chip" role="tab" type="button" data-cat="' + id + '" aria-selected="' + (cState.cat === id) + '">' + label + '<small>' + count + '</small></button>';
@@ -1187,7 +1257,7 @@
     } else {
       price = '<div class="ask"><b>Ask for fees</b><small>Message Ms. Maria for details</small></div>';
     }
-    var btnLabel = c.flags.indexOf('s') > -1 ? 'Register interest' : 'Enroll in this course';
+    var btnLabel = c.flags.indexOf('s') > -1 ? 'Register interest' : c.cat.id === 'career' ? 'Request this service' : 'Enroll in this course';
     return '<article class="course ' + catClass[c.cat.id] + '" style="animation-delay:' + Math.min(i % 12, 11) * 35 + 'ms">' +
       '<div class="top"><div class="ci" aria-hidden="true">' + c.cat.icon + '</div><div><div class="cname">' + esc(c.cat.name) + '</div><h4>' + esc(c.name) + '</h4></div></div>' +
       '<div class="tags">' + tags.join('') + '</div>' +
@@ -1251,6 +1321,7 @@
     setTimeout(function () { document.getElementById('fName').focus({ preventScroll: true }); }, 600);
   }
   gridEl.addEventListener('click', onEnrollClick);
+  document.getElementById('services').addEventListener('click', onEnrollClick);
 
   /* ---------- Course finder quiz ---------- */
   var HOSP = /hospitality|tourism|travel|aviation|airport|butler|cruise|barista|culinary|baking|housekeeping|mixology/i;
@@ -1266,7 +1337,8 @@
       ['hosp', '✈️', 'Hospitality & travel', 'Tourism, airport, food & drink'],
       ['safety', '🦺', 'Safety & technical', 'HSE, food safety, trades'],
       ['beauty', '💅', 'Beauty & fashion', 'Make-up, hair, nails, design'],
-      ['lang', '🗣️', 'Languages & exams', 'English, Arabic, IELTS, GED']
+      ['lang', '🗣️', 'Languages & exams', 'English, Arabic, IELTS, GED'],
+      ['career', '📝', 'Career support', 'CV, recommendation letter, mock interview']
     ]},
     { key: 'goal', q: 'What is your main goal?', opts: [
       ['new', '🚀', 'Start a new career', 'Get qualified for a new job'],
@@ -1300,6 +1372,7 @@
   function score(c) {
     if (!inArea(c, answers.area)) return -999;
     if (c.flags.indexOf('s') > -1) return -999;
+    if (answers.area === 'career') return 10;   // services: show all three, whatever the other answers
     var s = 10, lvl = levelOf(c.name), fee = c.one;
     if (answers.cert === 'must') { if (c.intl !== 1) return -999; s += 3; }
     else if (answers.cert === 'nice' && c.intl === 1) s += 3;

@@ -291,7 +291,7 @@
         <div class="fld full" data-newonly><label>Full name *</label><input class="f" name="name"></div>
         <div class="fld" data-newonly><label>Phone / WhatsApp *</label><input class="f" name="phone" inputmode="tel" placeholder="+974 …"></div>
         <div class="fld" data-newonly><label>Email</label><input class="f" name="email" type="email"></div>
-        <div class="fld full"><label>Course *</label><input class="f" name="course" list="courseList" placeholder="Start typing a course…"></div>
+        <div class="fld full"><label>Course or service *</label><input class="f" name="course" list="courseList" placeholder="Start typing a course or service…"></div>
         <div class="fld"><label>Lead source *</label><select class="f" name="source"></select></div>
         <div class="fld"><label>Source details</label><input class="f" name="sourceDetail" placeholder="Referred by, platform, school contact…"></div>
         <div class="fld"><label>Counsellor</label><select class="f" name="counsellor"></select></div>
@@ -699,7 +699,7 @@ af.email.addEventListener('input', checkExisting);
 af.onsubmit = function (e) {
   e.preventDefault(); var f = af;
   if (!addFor && (!f.name.value.trim() || !f.phone.value.trim())) return toast('Name and phone are required.', true);
-  if (!f.course.value.trim()) return toast('Choose or type a course.', true);
+  if (!f.course.value.trim()) return toast('Choose or type a course or service.', true);
   if (!f.source.value) return toast('Choose a lead source.', true);
   var info = courseInfo(f.course.value.trim());
   var d = {
